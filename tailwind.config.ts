@@ -10,6 +10,11 @@ const config: Config = {
   ],
   darkMode: ['class'],
   theme: {
+    screens: {
+      sm: '375px',
+      md: '768px',
+      lg: '1440px',
+    },
     container: {
       center: true,
       padding: '2rem',
@@ -20,6 +25,9 @@ const config: Config = {
       },
     },
     extend: {
+      backgroundImage: {
+        'auth-gradient': `linear-gradient(to top left, ${colors.brand.primary}90 -10%, ${colors.background.page}80 20%, ${colors.background.page} 100%)`,
+      },
       colors: {
         border: colors.border,
         background: colors.background,
