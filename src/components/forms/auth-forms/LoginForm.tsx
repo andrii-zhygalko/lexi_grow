@@ -1,8 +1,10 @@
 'use client';
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { LoginFormData, loginSchema } from '@/lib/schemas/auth/login';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
@@ -29,7 +31,11 @@ export function LoginForm() {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
       className='w-full max-w-[375px] rounded-t-[25px] bg-primary-primaryLight px-4 pb-[57px] pt-8 md:px-16 md:pb-12 md:pt-12 md:rounded-[30px] md:max-w-[628px]'
       role='region'
       aria-label='Login form'>
@@ -90,9 +96,9 @@ export function LoginForm() {
 
       <Link
         href='/register'
-        className='mt-4 block text-center font-primary text-base font-bold leading-6 text-text-secondary underline transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-border-hover focus-visible:ring-offset-2'>
+        className='mt-4 block text-center font-primary text-base font-bold leading-6 text-text-secondary underline hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-border-hover focus-visible:ring-offset-2'>
         Register
       </Link>
-    </div>
+    </motion.div>
   );
 }
