@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { PropsWithChildren } from 'react';
-import Icon from '@/components/common/Icon';
-import { AuthFeatures } from './AuthFeatures';
-import Image from 'next/image';
-import { cn } from '@/lib/utils';
-import { AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { PropsWithChildren } from "react";
+import Icon from "@/components/common/Icon";
+import { AuthFeatures } from "./AuthFeatures";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 interface AuthLayoutProps extends PropsWithChildren {
   illustrationAlt: string;
-  variant: 'login' | 'register';
+  variant: "login" | "register";
 }
 
 export function AuthLayout({
@@ -29,7 +29,7 @@ export function AuthLayout({
                 className='h-9 w-9 md:h-12 md:w-12'
                 aria-hidden='true'
               />
-              <span className='-mb-1.5 font-primary text-lg font-semibold leading-6 text-text-primary md:text-[22px] md:leading-8'>
+              <span className='-mb-1.5 font-primary text-[22px] font-semibold leading-8 text-text-primary md:text-[22px] md:leading-8'>
                 LexiGrow
               </span>
             </div>
@@ -38,26 +38,28 @@ export function AuthLayout({
         <div className='relative lg:min-h-[800px]'>
           <div
             className={cn(
-              'flex flex-col items-center',
-              'lg:grid lg:grid-template-columns-[628px_1fr]'
+              "flex flex-col items-center",
+              "lg:grid lg:grid-template-columns-[628px_1fr]"
             )}>
             <div
               className={cn(
-                'order-2 flex w-full justify-center',
-                'mt-[43px] md:mt-[140px]',
-                'md:px-[70px] lg:px-0',
-                'lg:order-1 lg:max-w-[628px]',
-                variant === 'login' ? 'lg:mt-[114px]' : 'lg:mt-16'
+                "order-2 flex w-full justify-center",
+                "mt-[43px] md:mt-[140px]",
+                "md:px-[70px] lg:px-0",
+                "lg:order-1 lg:max-w-[628px]",
+                variant === "login"
+                  ? "mt-[43px] lg:mt-[114px]"
+                  : "mt-2 lg:mt-16"
               )}>
               <AnimatePresence mode='wait'>{children}</AnimatePresence>
             </div>
 
             <div
               className={cn(
-                'order-1 flex flex-col items-center',
-                'md:order-3 lg:order-2',
-                'lg:absolute lg:right-0 lg:top-[103px]',
-                'lg:w-[498px]'
+                "order-1 flex flex-col items-center",
+                "md:order-3 lg:order-2",
+                "lg:absolute lg:right-0 lg:top-[103px]",
+                "lg:w-[498px]"
               )}>
               <div className='relative mt-3 h-[191px] w-[247px] md:hidden lg:block lg:h-[435px] lg:w-[498px]'>
                 <Image
