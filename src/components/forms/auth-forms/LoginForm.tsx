@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { yupResolver } from '@hookform/resolvers/yup';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
-import { useAppDispatch } from '@/redux/hooks';
-import { signin } from '@/redux/features/auth/operations';
-import { LoginFormData, loginSchema } from '@/lib/schemas/auth/login';
-import { Button } from '@/components/ui/button';
-import Icon from '@/components/common/Icon';
-import { FormField } from '../form-fields/FormField';
-import { Input } from '../form-fields/Input';
-import { useAuthToast } from '@/lib/utils';
-import { getErrorMessage } from '@/lib/utils';
-import { ApiError } from 'next/dist/server/api-utils';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { useAppDispatch } from "@/redux/hooks";
+import { signin } from "@/redux/features/auth/operations";
+import { LoginFormData, loginSchema } from "@/lib/schemas/auth/login";
+import { Button } from "@/components/ui/button";
+import Icon from "@/components/common/Icon";
+import { FormField } from "../form-fields/FormField";
+import { Input } from "../form-fields/Input";
+import { useAuthToast } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
+import { ApiError } from "next/dist/server/api-utils";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +36,7 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await dispatch(signin(data)).unwrap();
-      const redirectTo = searchParams.get('redirect') || '/dictionary';
+      const redirectTo = searchParams?.get("redirect") || "/dictionary";
       router.push(redirectTo);
     } catch (error) {
       showError(getErrorMessage(error as ApiError));
@@ -63,7 +63,7 @@ export function LoginForm() {
         noValidate>
         <FormField error={errors.email?.message}>
           <Input
-            {...register('email')}
+            {...register("email")}
             type='email'
             placeholder='Email'
             autoComplete='email'
@@ -75,8 +75,8 @@ export function LoginForm() {
         <FormField error={errors.password?.message}>
           <div className='relative'>
             <Input
-              {...register('password')}
-              type={showPassword ? 'text' : 'password'}
+              {...register("password")}
+              type={showPassword ? "text" : "password"}
               placeholder='Password'
               autoComplete='current-password'
               disabled={isSubmitting}
@@ -90,7 +90,7 @@ export function LoginForm() {
               className='absolute right-[18px] top-1/2 -translate-y-1/2'
               disabled={isSubmitting}>
               <Icon
-                id={showPassword ? '#eye_open' : '#eye_hidden'}
+                id={showPassword ? "#eye_open" : "#eye_hidden"}
                 className='h-5 w-5 text-text-primary stroke-text-primary fill-none'
               />
             </Button>
@@ -108,7 +108,7 @@ export function LoginForm() {
               Logging in...
             </>
           ) : (
-            'Login'
+            "Login"
           )}
         </Button>
       </form>

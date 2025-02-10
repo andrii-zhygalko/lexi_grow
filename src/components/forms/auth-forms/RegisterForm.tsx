@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { yupResolver } from '@hookform/resolvers/yup';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
-import { useAppDispatch } from '@/redux/hooks';
-import { signup } from '@/redux/features/auth/operations';
-import { RegisterFormData, registerSchema } from '@/lib/schemas/auth/register';
-import { Button } from '@/components/ui/button';
-import Icon from '@/components/common/Icon';
-import { FormField } from '../form-fields/FormField';
-import { Input } from '../form-fields/Input';
-import { useAuthToast } from '@/lib/utils';
-import { getErrorMessage } from '@/lib/utils';
-import { ApiError } from 'next/dist/server/api-utils';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { useAppDispatch } from "@/redux/hooks";
+import { signup } from "@/redux/features/auth/operations";
+import { RegisterFormData, registerSchema } from "@/lib/schemas/auth/register";
+import { Button } from "@/components/ui/button";
+import Icon from "@/components/common/Icon";
+import { FormField } from "../form-fields/FormField";
+import { Input } from "../form-fields/Input";
+import { useAuthToast } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
+import { ApiError } from "next/dist/server/api-utils";
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +35,7 @@ export function RegisterForm() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       await dispatch(signup(data)).unwrap();
-      router.push('/dictionary');
+      router.push("/dictionary");
     } catch (error) {
       showError(getErrorMessage(error as ApiError));
     }
@@ -62,7 +62,7 @@ export function RegisterForm() {
         noValidate>
         <FormField error={errors.name?.message}>
           <Input
-            {...register('name')}
+            {...register("name")}
             type='text'
             placeholder='Name'
             autoComplete='name'
@@ -73,7 +73,7 @@ export function RegisterForm() {
 
         <FormField error={errors.email?.message}>
           <Input
-            {...register('email')}
+            {...register("email")}
             type='email'
             placeholder='Email'
             autoComplete='email'
@@ -85,8 +85,8 @@ export function RegisterForm() {
         <FormField error={errors.password?.message}>
           <div className='relative'>
             <Input
-              {...register('password')}
-              type={showPassword ? 'text' : 'password'}
+              {...register("password")}
+              type={showPassword ? "text" : "password"}
               placeholder='Password'
               autoComplete='new-password'
               disabled={isSubmitting}
@@ -100,7 +100,7 @@ export function RegisterForm() {
               className='absolute right-[18px] top-1/2 -translate-y-1/2'
               disabled={isSubmitting}>
               <Icon
-                id={showPassword ? '#eye_open' : '#eye_hidden'}
+                id={showPassword ? "#eye_open" : "#eye_hidden"}
                 className='h-5 w-5 text-text-primary stroke-text-primary fill-none'
               />
             </Button>
@@ -118,7 +118,7 @@ export function RegisterForm() {
               Registering...
             </>
           ) : (
-            'Register'
+            "Register"
           )}
         </Button>
       </form>
