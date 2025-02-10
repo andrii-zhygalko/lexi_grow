@@ -35,7 +35,7 @@ export const colors = {
     disabled: palette.black.alpha20,
     success: palette.green.success,
     error: palette.red.base,
-    inverse: palette.white.pure,
+    inverse: palette.white.off,
   },
   background: {
     page: palette.white.off,

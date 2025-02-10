@@ -128,6 +128,12 @@
 			<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2.4" d="M5.333 16h21.333M26.667 16l-5.333-5.333M26.667 16l-5.333 5.333">
 			</path>
 		</symbol>
+		<symbol id="arrow-right-logout" viewBox="0 0 32 32">
+			<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="3.2" d="M1.867 16h25.6">
+			</path>
+			<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="3.2" d="M19.2 6.667l9.333 9.333-9.333 9.333">
+			</path>
+		</symbol>
 		<symbol id="search" viewBox="0 0 32 32">
 			<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2.4" d="M14.667 25.333c5.891 0 10.667-4.776 10.667-10.667s-4.776-10.667-10.667-10.667c-5.891 0-10.667 4.776-10.667 10.667s4.776 10.667 10.667 10.667z">
 			</path>
