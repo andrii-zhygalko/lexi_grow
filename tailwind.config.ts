@@ -31,10 +31,12 @@ const config: Config = {
       colors: {
         border: colors.border,
         background: colors.background,
-        primary: colors.brand,
+        brand: colors.brand,
         text: colors.text,
         status: colors.status,
         progress: colors.progress,
+        stroke: colors.brand,
+        table: colors.table,
 
         card: {
           DEFAULT: 'hsl(var(--card))',

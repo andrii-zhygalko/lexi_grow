@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { selectUser } from "@/redux/features/auth/selectors";
-import { signout } from "@/redux/features/auth/operations";
-import { Button } from "@/components/ui/button";
-import Icon from "@/components/common/Icon";
+import { useRouter } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { selectUser } from '@/redux/features/auth/selectors';
+import { signout } from '@/redux/features/auth/operations';
+import { Button } from '@/components/ui/button';
+import Icon from '@/components/common/Icon';
 
 export function UserBar() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export function UserBar() {
 
   const handleLogout = async () => {
     await dispatch(signout()).unwrap();
-    router.push("/login");
+    router.push('/login');
   };
 
   return (
@@ -23,7 +23,7 @@ export function UserBar() {
         {user?.name}
       </span>
 
-      <div className='ml-2.5 flex h-12 w-12 items-center justify-center rounded-[30px] bg-primary-primary'>
+      <div className='ml-2.5 flex h-12 w-12 items-center justify-center rounded-[30px] bg-brand-primary'>
         <Icon
           id='#user'
           className='h-6 w-6 fill-text-inverse/70'

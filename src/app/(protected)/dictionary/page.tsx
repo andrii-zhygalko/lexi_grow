@@ -1,3 +1,9 @@
-export default function Placeholder() {
-  return null;
+import { Dashboard } from "@/components/dictionary/dashboard/Dashboard";
+
+export default function DictionaryPage() {
+  return (
+    <div className='min-h-screen bg-background-page px-[100px] pt-20'>
+      <Dashboard />
+    </div>
+  );
 }

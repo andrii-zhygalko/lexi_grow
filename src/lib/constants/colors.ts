@@ -21,6 +21,10 @@ const palette = {
   red: {
     base: '#D80027',
   },
+  misc: {
+    gainsboro: '#DBDBDB',
+    cultured: 'rgba(133, 170, 159, 0.10);',
+  },
 } as const;
 
 export const colors = {
@@ -39,7 +43,7 @@ export const colors = {
   },
   background: {
     page: palette.white.off,
-    card: palette.white.pure,
+    white: palette.white.pure,
     secondary: palette.white.gray,
     overlay: palette.black.alpha50,
     overlayLight: palette.black.alpha20,
@@ -56,6 +60,10 @@ export const colors = {
   status: {
     success: palette.green.success,
     error: palette.red.base,
+  },
+  table: {
+    border: palette.misc.gainsboro,
+    row: palette.misc.cultured,
   },
 } as const;
 

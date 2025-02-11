@@ -24,8 +24,8 @@ export function UserNav() {
                 'flex h-[48px] min-w-[100px] items-center justify-center rounded-[15px] px-5 py-3',
                 'font-primary text-sm font-medium transition-colors',
                 pathname === item.href
-                  ? 'bg-primary-primary text-background-page'
-                  : 'text-text-primary hover:text-primary-primary'
+                  ? 'bg-brand-primary text-background-page'
+                  : 'text-text-primary hover:text-brand-primary'
               )}>
               {item.name}
             </Link>
