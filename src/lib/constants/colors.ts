@@ -64,6 +64,7 @@ export const colors = {
   table: {
     border: palette.misc.gainsboro,
     row: palette.misc.cultured,
+    cell: palette.white.off,
   },
 } as const;
 
