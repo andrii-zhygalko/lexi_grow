@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { FormField } from '../form-fields/FormField';
 import { Input } from '../form-fields/Input';
-import { useAuthToast } from '@/lib/utils';
+import { useAppToast } from '@/lib/utils';
 import { getErrorMessage } from '@/lib/utils';
 import { ApiError } from 'next/dist/server/api-utils';
 
@@ -23,7 +23,7 @@ export function LoginForm() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { showError } = useAuthToast();
+  const { showError } = useAppToast();
 
   const {
     register,

@@ -37,6 +37,7 @@ const config: Config = {
         progress: colors.progress,
         stroke: colors.brand,
         table: colors.table,
+        radio: colors.radio,
 
         card: {
           DEFAULT: 'hsl(var(--card))',

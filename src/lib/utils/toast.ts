@@ -1,6 +1,6 @@
 import { useToast } from '@/hooks/use-toast';
 
-export const useAuthToast = () => {
+export const useAppToast = () => {
   const { toast } = useToast();
 
   return {

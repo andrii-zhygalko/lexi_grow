@@ -66,6 +66,10 @@ export const colors = {
     row: palette.misc.cultured,
     cell: palette.white.off,
   },
+  radio: {
+    chacked: palette.green.base,
+    unchecked: palette.black.alpha20,
+  },
 } as const;
 
 export type ColorPalette = typeof colors;

@@ -4,11 +4,11 @@ import { PropsWithChildren, useEffect } from 'react';
 import { useAppDispatch } from '@/redux/hooks';
 import { getCurrentUser } from '@/redux/features/auth/operations';
 import { authService } from '@/services/api/auth';
-import { useAuthToast } from '@/lib/utils';
+import { useAppToast } from '@/lib/utils';
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const dispatch = useAppDispatch();
-  const { showError } = useAuthToast();
+  const { showError } = useAppToast();
 
   useEffect(() => {
     async function checkAuth() {

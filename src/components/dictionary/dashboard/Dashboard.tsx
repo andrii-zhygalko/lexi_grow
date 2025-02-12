@@ -1,9 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { Filters } from './Filters';
 import { Statistics } from './Statistics';
 import { WordsTable } from '../words-table/WordsTable';
+import { WordsPagination } from '../words-table/WordsPagination';
 
 export function Dashboard() {
   return (
@@ -45,6 +48,7 @@ export function Dashboard() {
 
       <div className="mt-7">
         <WordsTable />
+        <WordsPagination className="mt-7" />
       </div>
     </div>
   );
