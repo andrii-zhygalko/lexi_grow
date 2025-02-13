@@ -12,34 +12,60 @@ import {
 } from '@/components/ui/select';
 import Icon from '@/components/common/Icon';
 import {
-  fetchCategories,
-  fetchWords,
+  fetchCategories as fetchDictionaryCategories,
+  fetchWords as fetchDictionaryWords,
 } from '@/redux/features/dictionary/operations';
+import {
+  fetchCategories as fetchRecommendCategories,
+  fetchWords as fetchRecommendWords,
+} from '@/redux/features/recommend/operations';
 import { useDebounce } from '@/lib/hooks/useDebounce';
 import { WordCategory } from '@/lib/types/dictionary';
 import { ApiError, getErrorMessage } from '@/lib/utils/error';
 import { showError } from '@/lib/utils/toast';
 import { cn } from '@/lib/utils';
 import {
-  selectCategories,
+  selectCategories as selectDictionaryCategories,
   selectDictionaryStatus,
-  selectFilters,
+  selectFilters as selectDictionaryFilters,
 } from '@/redux/features/dictionary/selectors';
-import { setFilter } from '@/redux/features/dictionary/dictionarySlice';
+import {
+  selectRecommendCategories,
+  selectRecommendStatus,
+  selectRecommendFilters,
+} from '@/redux/features/recommend/selectors';
+import { setFilter as setDictionaryFilter } from '@/redux/features/dictionary/dictionarySlice';
+import { setFilter as setRecommendFilter } from '@/redux/features/recommend/recommendSlice';
 import { MAX_SEARCH_LENGTH } from '@/lib/constants/dashboard';
 
-export function Filters() {
+interface FiltersProps {
+  variant: 'dictionary' | 'recommend';
+}
+
+export function Filters({ variant }: FiltersProps) {
   const dispatch = useAppDispatch();
-  const status = useAppSelector(selectDictionaryStatus);
-  const categories = useAppSelector(selectCategories);
-  const filters = useAppSelector(selectFilters);
+  const status = useAppSelector(
+    variant === 'dictionary' ? selectDictionaryStatus : selectRecommendStatus
+  );
+  const categories = useAppSelector(
+    variant === 'dictionary'
+      ? selectDictionaryCategories
+      : selectRecommendCategories
+  );
+  const filters = useAppSelector(
+    variant === 'dictionary' ? selectDictionaryFilters : selectRecommendFilters
+  );
   const [searchValue, setSearchValue] = useState(filters.keyword);
   const [searchError, setSearchError] = useState('');
   const debouncedSearch = useDebounce(searchValue, 300);
 
   useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    dispatch(
+      variant === 'dictionary'
+        ? fetchDictionaryCategories()
+        : fetchRecommendCategories()
+    );
+  }, [dispatch, variant]);
 
   useEffect(() => {
     try {
@@ -58,6 +84,11 @@ export function Filters() {
       setSearchError('');
       const sanitizedValue = value.replace(/\s+/g, ' ');
 
+      const setFilter =
+        variant === 'dictionary' ? setDictionaryFilter : setRecommendFilter;
+      const fetchWords =
+        variant === 'dictionary' ? fetchDictionaryWords : fetchRecommendWords;
+
       dispatch(setFilter({ key: 'keyword', value: sanitizedValue }));
       dispatch(fetchWords())
         .unwrap()
@@ -69,7 +100,7 @@ export function Filters() {
       const errorMessage = getErrorMessage(error as ApiError);
       showError(errorMessage);
     }
-  }, [debouncedSearch, dispatch]);
+  }, [debouncedSearch, dispatch, variant]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -81,6 +112,11 @@ export function Filters() {
   };
 
   const handleCategoryChange = (value: WordCategory | 'all') => {
+    const setFilter =
+      variant === 'dictionary' ? setDictionaryFilter : setRecommendFilter;
+    const fetchWords =
+      variant === 'dictionary' ? fetchDictionaryWords : fetchRecommendWords;
+
     dispatch(
       setFilter({
         key: 'category',
@@ -96,6 +132,11 @@ export function Filters() {
   };
 
   const handleVerbTypeChange = (isIrregular: boolean) => {
+    const setFilter =
+      variant === 'dictionary' ? setDictionaryFilter : setRecommendFilter;
+    const fetchWords =
+      variant === 'dictionary' ? fetchDictionaryWords : fetchRecommendWords;
+
     dispatch(setFilter({ key: 'isIrregular', value: isIrregular }));
     dispatch(fetchWords());
   };

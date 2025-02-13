@@ -67,3 +67,11 @@ export interface WordsPaginationProps {
   onPageChange: (page: number) => void;
   className?: string;
 }
+
+export interface WordsParams {
+  keyword?: string;
+  category?: WordCategory;
+  isIrregular?: boolean;
+  page?: number;
+  limit?: number;
+}

@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DictionaryState, WordCategory } from '@/lib/types/dictionary';
-import { fetchCategories, fetchWords, fetchStatistics } from './operations';
+import { RecommendState } from '@/lib/types/recommend';
+import { WordCategory } from '@/lib/types/dictionary';
+import { fetchCategories, fetchWords } from './operations';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
 type FilterValue = string | number | boolean | WordCategory | null;
 
-const initialState: DictionaryState = {
+const initialState: RecommendState = {
   categories: [],
   filters: {
     keyword: '',
@@ -21,19 +22,16 @@ const initialState: DictionaryState = {
   },
   status: 'idle',
   error: null,
-  statistics: {
-    totalCount: 0,
-  },
 };
 
-const dictionarySlice = createSlice({
-  name: 'dictionary',
+const recommendSlice = createSlice({
+  name: 'recommend',
   initialState,
   reducers: {
     setFilter: (
       state,
       action: PayloadAction<{
-        key: keyof DictionaryState['filters'];
+        key: keyof RecommendState['filters'];
         value: FilterValue;
       }>
     ) => {
@@ -45,15 +43,6 @@ const dictionarySlice = createSlice({
     },
     resetFilters: (state) => {
       state.filters = initialState.filters;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
-    incrementTotalCount: (state) => {
-      state.statistics.totalCount += 1;
-    },
-    decrementTotalCount: (state) => {
-      state.statistics.totalCount -= 1;
     },
   },
   extraReducers: (builder) => {
@@ -81,18 +70,9 @@ const dictionarySlice = createSlice({
       .addCase(fetchWords.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
-      })
-      .addCase(fetchStatistics.fulfilled, (state, action) => {
-        state.statistics = action.payload;
       });
   },
 });
 
-export const {
-  setFilter,
-  resetFilters,
-  clearError,
-  incrementTotalCount,
-  decrementTotalCount,
-} = dictionarySlice.actions;
-export default dictionarySlice.reducer;
+export const { setFilter, resetFilters } = recommendSlice.actions;
+export default recommendSlice.reducer;
