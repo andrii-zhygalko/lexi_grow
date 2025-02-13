@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
@@ -7,8 +8,20 @@ import { Filters } from './Filters';
 import { Statistics } from './Statistics';
 import { WordsTable } from '../words-table/WordsTable';
 import { WordsPagination } from '../words-table/WordsPagination';
+import { useAppDispatch } from '@/redux/hooks';
+import {
+  fetchWords,
+  fetchStatistics,
+} from '@/redux/features/dictionary/operations';
 
 export function Dashboard() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchWords());
+    dispatch(fetchStatistics());
+  }, [dispatch]);
+
   return (
     <div>
       <div className="flex items-center justify-between">

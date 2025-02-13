@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './features/auth/authSlice';
-// import dictionaryReducer from './features/dictionary/dictionarySlice';
+import dictionaryReducer from './features/dictionary/dictionarySlice';
 // import trainingReducer from './features/training/trainingSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    // dictionary: dictionaryReducer,
+    dictionary: dictionaryReducer,
     // training: trainingReducer,
   },
 });

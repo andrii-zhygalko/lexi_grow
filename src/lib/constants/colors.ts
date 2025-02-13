@@ -67,7 +67,7 @@ export const colors = {
     cell: palette.white.off,
   },
   radio: {
-    chacked: palette.green.base,
+    checked: palette.green.base,
     unchecked: palette.black.alpha20,
   },
 } as const;

@@ -14,9 +14,8 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { FormField } from '../form-fields/FormField';
 import { Input } from '../form-fields/Input';
-import { useAppToast } from '@/lib/utils';
+import { ApiError, useAppToast } from '@/lib/utils';
 import { getErrorMessage } from '@/lib/utils';
-import { ApiError } from 'next/dist/server/api-utils';
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);

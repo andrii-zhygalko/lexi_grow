@@ -1,13 +1,15 @@
-"use client";
+'use client';
+
+import { useAppSelector } from '@/redux/hooks';
+import { selectStatistics } from '@/redux/features/dictionary/selectors';
 
 export function Statistics() {
+  const { totalCount } = useAppSelector(selectStatistics);
+
   return (
-    <div className='flex items-center'>
-      <span className='font-primary text-base font-medium text-text-primary/50'>
-        To study:
-      </span>
-      <span className='ml-2 font-primary text-xl font-medium text-text-primary'>
-        0
+    <div className="flex items-center gap-2">
+      <span className="font-primary text-base font-medium">
+        To study: {totalCount}
       </span>
     </div>
   );

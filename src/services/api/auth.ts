@@ -1,6 +1,5 @@
-import { ApiError } from 'next/dist/server/api-utils';
 import { api } from './config';
-import { getErrorMessage } from '@/lib/utils';
+import { ApiError, getErrorMessage } from '@/lib/utils';
 import Cookies from 'js-cookie';
 
 interface AuthResponse {
@@ -32,7 +31,8 @@ export const authService = {
       this.setToken(response.data.token);
       return response.data;
     } catch (error) {
-      throw new Error(getErrorMessage(error as ApiError));
+      const errorMessage = getErrorMessage(error as ApiError);
+      throw new Error(errorMessage);
     }
   },
 

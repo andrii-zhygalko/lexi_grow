@@ -76,6 +76,15 @@ const config: Config = {
         md: 'calc(0.5rem - 2px)',
         sm: 'calc(0.5rem - 4px)',
       },
+      keyframes: {
+        scale: {
+          '0%, 100%': { transform: 'translateY(-50%) scale(1)' },
+          '50%': { transform: 'translateY(-50%) scale(1.2)' },
+        },
+      },
+      animation: {
+        scale: 'scale 1s ease-in-out infinite',
+      },
     },
   },
   plugins: [animate],
