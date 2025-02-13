@@ -66,3 +66,19 @@ export const addWordToDictionary = createAsyncThunk(
     }
   }
 );
+
+export const deleteWord = createAsyncThunk(
+  'dictionary/deleteWord',
+  async (wordId: string, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await dictionaryApi.deleteWord(wordId);
+      dispatch(decrementTotalCount());
+      return response;
+    } catch (error) {
+      if ((error as ApiError).response?.status !== 404) {
+        dispatch(incrementTotalCount());
+      }
+      return rejectWithValue(serializeError(error as ApiError));
+    }
+  }
+);

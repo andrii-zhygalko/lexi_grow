@@ -35,7 +35,7 @@ const config: Config = {
         text: colors.text,
         status: colors.status,
         progress: colors.progress,
-        stroke: colors.brand,
+        stroke: { ...colors.brand, ...colors.text },
         table: colors.table,
         radio: colors.radio,
 

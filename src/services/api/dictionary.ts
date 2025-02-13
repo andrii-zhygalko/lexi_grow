@@ -105,4 +105,16 @@ export const dictionaryApi = {
       method: 'POST',
     });
   },
+
+  deleteWord: async (wordId: string) => {
+    return fetchWithRetry<{ message: string; id: string }>(
+      `${baseURL}/words/delete/${wordId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
+  },
 };

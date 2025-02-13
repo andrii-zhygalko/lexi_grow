@@ -17,6 +17,16 @@ import {
 } from '@/components/ui/popover';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAppDispatch } from '@/redux/hooks';
+import { useState } from 'react';
+import {
+  deleteWord,
+  fetchWords,
+  fetchStatistics,
+} from '@/redux/features/dictionary/operations';
+import { showSuccess, showError } from '@/lib/utils';
+import { getErrorMessage } from '@/lib/utils';
+import { ApiError } from '@/lib/utils/error';
 
 type WordsTableProps = {
   words: WordResponse[];
@@ -53,6 +63,25 @@ const columnWidths = {
 
 export function WordsTable(props: WordsTableProps) {
   const { variant, words, isLoading } = props;
+  const dispatch = useAppDispatch();
+  const [deletingWordIds, setDeletingWordIds] = useState<string[]>([]);
+
+  const handleDeleteWord = async (wordId: string) => {
+    try {
+      setDeletingWordIds((prev) => [...prev, wordId]);
+
+      await dispatch(deleteWord(wordId)).unwrap();
+      showSuccess('Word deleted successfully');
+
+      dispatch(fetchWords());
+      dispatch(fetchStatistics());
+    } catch (error) {
+      const errorMessage = getErrorMessage(error as ApiError);
+      showError(errorMessage);
+    } finally {
+      setDeletingWordIds((prev) => prev.filter((id) => id !== wordId));
+    }
+  };
 
   const columns = [
     columnHelper.accessor('en', {
@@ -122,6 +151,8 @@ export function WordsTable(props: WordsTableProps) {
       cell: ({ getValue }) => {
         const id = getValue();
         if (variant === 'dictionary') {
+          const isDeleting = deletingWordIds.includes(id);
+
           return (
             <div className="flex justify-center">
               <Popover>
@@ -144,19 +175,27 @@ export function WordsTable(props: WordsTableProps) {
                     >
                       <Icon
                         id="#edit"
-                        className="mr-2 h-5 w-5 stroke-brand-primary fill-none"
+                        className="h-5 w-5 stroke-brand-primary fill-none mr-2 mb-1"
+                        aria-hidden="true"
                       />
-                      Edit
+                      <span>Edit</span>
                     </Button>
                     <Button
                       variant="ghost"
-                      className="flex justify-start items-center p-1 w-full"
+                      className="flex justify-start items-center p-1 w-full text-text-primary hover:text-text-error group"
+                      onClick={() => handleDeleteWord(id)}
+                      disabled={isDeleting}
                     >
-                      <Icon
-                        id="#delete"
-                        className="mr-2 h-5 w-5 stroke-brand-primary fill-none"
-                      />
-                      Delete
+                      {isDeleting ? (
+                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                      ) : (
+                        <Icon
+                          id="#delete"
+                          className="h-5 w-5 stroke-brand-primary group-hover:stroke-text-error fill-none mr-2 mb-1 transition-colors duration-200"
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span>Delete</span>
                     </Button>
                   </div>
                 </PopoverContent>
