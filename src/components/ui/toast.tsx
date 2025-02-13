@@ -4,7 +4,6 @@ import * as React from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
 
 const ToastProvider = ToastPrimitives.Provider;
@@ -31,7 +30,9 @@ const toastVariants = cva(
       variant: {
         default: 'border bg-background text-foreground',
         destructive:
-          'destructive group border-destructive bg-destructive text-destructive-foreground',
+          'destructive group border-destructive bg-destructive/80 text-destructive-foreground',
+        success:
+          'success group border-status-success bg-status-success/80 text-white',
       },
     },
     defaultVariants: {
@@ -53,6 +54,7 @@ const Toast = React.forwardRef<
     />
   );
 });
+Toast.displayName = ToastPrimitives.Root.displayName;
 Toast.displayName = ToastPrimitives.Root.displayName;
 
 const ToastAction = React.forwardRef<
@@ -80,9 +82,10 @@ const ToastClose = React.forwardRef<
       'absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
       className
     )}
-    toast-close=''
-    {...props}>
-    <X className='h-4 w-4' />
+    toast-close=""
+    {...props}
+  >
+    <X className="h-4 w-4" />
   </ToastPrimitives.Close>
 ));
 ToastClose.displayName = ToastPrimitives.Close.displayName;

@@ -33,6 +33,13 @@ export function getErrorMessage(error: ApiError): string {
     return 'Session expired. Please log in again.';
   }
 
+  if (
+    error.response?.status === 409 &&
+    error.config?.url?.includes('/words/add')
+  ) {
+    return 'Word already exists in your dictionary';
+  }
+
   if (error.response?.data?.message) {
     return error.response.data.message;
   }
@@ -43,7 +50,16 @@ export function getErrorMessage(error: ApiError): string {
     case 404:
       return 'Service is currently unavailable';
     case 409:
-      return 'Email already exists';
+      if (error.config?.url?.includes('/words/add')) {
+        return 'Word already exists in your dictionary';
+      }
+      if (error.config?.url?.includes('/users')) {
+        return 'This email already exists';
+      }
+      if (error.response?.data?.message) {
+        return error.response.data.message;
+      }
+      return 'A conflict occurred with existing data';
     case 500:
       return 'Something went wrong, please try again';
     default:

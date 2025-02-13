@@ -12,6 +12,7 @@ export const useAppToast = () => {
     },
     showSuccess: (message: string) => {
       toast({
+        variant: 'success',
         title: 'Success',
         description: message,
         duration: 2000,
@@ -31,6 +32,7 @@ export const showError = (error: string) => {
 
 export const showSuccess = (message: string) => {
   toast({
+    variant: 'success',
     title: 'Success',
     description: message,
     duration: 2000,

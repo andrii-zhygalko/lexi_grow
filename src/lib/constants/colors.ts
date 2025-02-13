@@ -10,6 +10,7 @@ const palette = {
     light: '#A5C0B8',
     success: '#3CBF61',
     alpha10: 'rgba(133, 170, 159, 0.10)',
+    alpha40: 'rgba(rgba(252, 252, 252, 0.40)',
     progressLight: '#D4F8D3',
     progressDark: '#2BD627',
   },
@@ -17,6 +18,7 @@ const palette = {
     pure: '#FFFFFF',
     off: '#FCFCFC',
     gray: '#F8F8F8',
+    alpha30: 'rgba(252, 252, 252, 0.30)',
   },
   red: {
     base: '#D80027',
@@ -52,6 +54,8 @@ export const colors = {
   border: {
     default: palette.black.alpha10,
     hover: palette.green.base,
+    inputLight: palette.white.alpha30,
+    inputAccentLight: palette.green.alpha40,
   },
   progress: {
     background: palette.green.progressLight,
