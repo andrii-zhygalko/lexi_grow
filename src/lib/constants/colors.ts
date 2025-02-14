@@ -10,7 +10,7 @@ const palette = {
     light: '#A5C0B8',
     success: '#3CBF61',
     alpha10: 'rgba(133, 170, 159, 0.10)',
-    alpha40: 'rgba(rgba(252, 252, 252, 0.40)',
+    alpha40: 'rgba(252, 252, 252, 0.40)',
     progressLight: '#D4F8D3',
     progressDark: '#2BD627',
   },
@@ -22,6 +22,7 @@ const palette = {
   },
   red: {
     base: '#D80027',
+    dark: '#B64055',
   },
   misc: {
     gainsboro: '#DBDBDB',
@@ -41,6 +42,7 @@ export const colors = {
     disabled: palette.black.alpha20,
     success: palette.green.success,
     error: palette.red.base,
+    errorDark: palette.red.dark,
     inverse: palette.white.off,
   },
   background: {
@@ -56,6 +58,7 @@ export const colors = {
     hover: palette.green.base,
     inputLight: palette.white.alpha30,
     inputAccentLight: palette.green.alpha40,
+    inverse: palette.white.off,
   },
   progress: {
     background: palette.green.progressLight,
@@ -64,6 +67,7 @@ export const colors = {
   status: {
     success: palette.green.success,
     error: palette.red.base,
+    errorDark: palette.red.dark,
   },
   table: {
     border: palette.misc.gainsboro,

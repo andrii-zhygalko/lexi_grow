@@ -3,6 +3,7 @@ import {
   WordCategory,
   WordsResponse,
   WordResponse,
+  EditWordData,
 } from '@/lib/types/dictionary';
 import { baseURL } from './config';
 
@@ -116,5 +117,23 @@ export const dictionaryApi = {
         },
       }
     );
+  },
+
+  editWord: async (wordId: string, wordData: EditWordData) => {
+    const requestBody = {
+      en: wordData.en,
+      ua: wordData.ua,
+      category: wordData.category,
+      isIrregular: wordData.isIrregular,
+    };
+
+    return fetchWithRetry<WordResponse>(`${baseURL}/words/edit/${wordId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
   },
 };

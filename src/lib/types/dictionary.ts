@@ -3,7 +3,7 @@ export interface WordResponse {
   en: string;
   ua: string;
   category: WordCategory;
-  isIrregular?: boolean;
+  isIrregular?: boolean | undefined;
   owner: string;
   progress: number;
 }
@@ -13,6 +13,12 @@ export interface WordsResponse {
   totalPages: number;
   page: number;
   perPage: number;
+}
+export interface EditWordData {
+  en: string;
+  ua: string;
+  category: WordCategory;
+  isIrregular: boolean | undefined;
 }
 
 export type WordCategory =

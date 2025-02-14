@@ -6,31 +6,51 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogOverlay,
 } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description?: string;
   children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
 }
 
-const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+export const Modal = ({
+  open,
+  onOpenChange,
+  title,
+  description,
+  children,
+  className,
+  contentClassName,
+}: ModalProps) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay className="bg-background-overlay" />
-      <DialogContent className="fixed bottom-0 left-0 right-0 p-0 border-0">
-        <div className="w-full max-w-[375px] mx-auto rounded-t-[25px] bg-brand-primaryLight">
-          {title && (
-            <DialogHeader className="px-4 pt-8">
-              <DialogTitle className="font-primary text-[30px] font-semibold leading-8 tracking-[-0.6px] text-text-primary">
-                {title}
-              </DialogTitle>
-            </DialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogOverlay className="bg-background-overlayLight data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+      <DialogContent
+        className={cn(
+          'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+          'p-0 border-0 bg-transparent',
+          'data-[state=open]:duration-200',
+          '[&>button]:hidden',
+          className
+        )}
+      >
+        <DialogHeader>
+          <DialogTitle className="sr-only">{title}</DialogTitle>
+          {description && (
+            <DialogDescription className="sr-only">
+              {description}
+            </DialogDescription>
           )}
-          {children}
-        </div>
+        </DialogHeader>
+        <div className={cn('w-full', contentClassName)}>{children}</div>
       </DialogContent>
     </Dialog>
   );

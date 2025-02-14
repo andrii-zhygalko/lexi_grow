@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo } from 'react';
 import { cn } from '@/lib/utils';
 import { colors } from '@/lib/constants/colors';
 
@@ -11,7 +11,7 @@ interface ProgressCircleProps {
   className?: string;
 }
 
-export function ProgressCircle({
+export const ProgressCircle = memo(function ProgressCircle({
   value,
   size = 26,
   thickness = 4,
@@ -19,18 +19,10 @@ export function ProgressCircle({
   backgroundColor = colors.progress.background,
   className,
 }: ProgressCircleProps) {
-  const [animatedValue, setAnimatedValue] = useState(0);
-
   const center = size / 2;
   const radius = (size - thickness) / 2;
   const circumference = 2 * Math.PI * radius;
-
-  const strokeDashoffset =
-    circumference - (animatedValue / 100) * circumference;
-
-  useEffect(() => {
-    setAnimatedValue(value);
-  }, [value]);
+  const strokeDashoffset = circumference - (value / 100) * circumference;
 
   return (
     <div
@@ -50,7 +42,6 @@ export function ProgressCircle({
           fill="none"
           stroke={backgroundColor}
           strokeWidth={thickness}
-          className="transition-all duration-300"
         />
 
         <circle
@@ -68,4 +59,4 @@ export function ProgressCircle({
       </svg>
     </div>
   );
-}
+});

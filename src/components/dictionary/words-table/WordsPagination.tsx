@@ -1,21 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchWords as fetchDictionaryWords } from '@/redux/features/dictionary/operations';
 import { fetchWords as fetchRecommendWords } from '@/redux/features/recommend/operations';
-import {
-  selectFilters as selectDictionaryFilters,
-  selectPaginationData as selectDictionaryPaginationData,
-} from '@/redux/features/dictionary/selectors';
-import {
-  selectRecommendFilters,
-  selectRecommendPaginationData,
-} from '@/redux/features/recommend/selectors';
+import { selectPaginationData as selectDictionaryPaginationData } from '@/redux/features/dictionary/selectors';
+import { selectRecommendPaginationData } from '@/redux/features/recommend/selectors';
 import { setFilter as setDictionaryFilter } from '@/redux/features/dictionary/dictionarySlice';
 import { setFilter as setRecommendFilter } from '@/redux/features/recommend/recommendSlice';
 
@@ -34,46 +26,14 @@ interface WordsPaginationProps {
 }
 
 export function WordsPagination({ className, variant }: WordsPaginationProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const { page, totalPages, hasWords } = useAppSelector(
     variant === 'dictionary'
       ? selectDictionaryPaginationData
       : selectRecommendPaginationData
   );
-  const filters = useAppSelector(
-    variant === 'dictionary' ? selectDictionaryFilters : selectRecommendFilters
-  );
-  const isInitialMount = useRef(true);
-
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      const urlPage =
-        Number(
-          searchParams.get(variant === 'dictionary' ? 'dict_page' : 'rec_page')
-        ) || 1;
-      if (urlPage !== filters.page) {
-        const setFilter =
-          variant === 'dictionary' ? setDictionaryFilter : setRecommendFilter;
-        const fetchWords =
-          variant === 'dictionary' ? fetchDictionaryWords : fetchRecommendWords;
-
-        dispatch(setFilter({ key: 'page', value: urlPage }));
-        dispatch(fetchWords());
-      }
-    }
-  }, [searchParams, dispatch, filters.page, variant]);
 
   const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set(
-      variant === 'dictionary' ? 'dict_page' : 'rec_page',
-      newPage.toString()
-    );
-    router.push(`?${params.toString()}`);
-
     const setFilter =
       variant === 'dictionary' ? setDictionaryFilter : setRecommendFilter;
     const fetchWords =

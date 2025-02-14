@@ -23,10 +23,13 @@ import {
   deleteWord,
   fetchWords,
   fetchStatistics,
+  editWord,
 } from '@/redux/features/dictionary/operations';
 import { showSuccess, showError } from '@/lib/utils';
 import { getErrorMessage } from '@/lib/utils';
 import { ApiError } from '@/lib/utils/error';
+import { EditWordModal } from './EditWordModal';
+import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
 type WordsTableProps = {
   words: WordResponse[];
@@ -65,6 +68,8 @@ export function WordsTable(props: WordsTableProps) {
   const { variant, words, isLoading } = props;
   const dispatch = useAppDispatch();
   const [deletingWordIds, setDeletingWordIds] = useState<string[]>([]);
+  const [editingWord, setEditingWord] = useState<WordResponse | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDeleteWord = async (wordId: string) => {
     try {
@@ -80,6 +85,34 @@ export function WordsTable(props: WordsTableProps) {
       showError(errorMessage);
     } finally {
       setDeletingWordIds((prev) => prev.filter((id) => id !== wordId));
+    }
+  };
+
+  const handleEditWord = async (data: { en: string; ua: string }) => {
+    if (!editingWord) return;
+
+    try {
+      setIsSubmitting(true);
+      await dispatch(
+        editWord({
+          wordId: editingWord._id,
+          wordData: {
+            en: data.en,
+            ua: data.ua,
+            category: editingWord.category,
+            isIrregular: editingWord.isIrregular ?? undefined,
+          },
+        })
+      ).unwrap();
+
+      showSuccess('Word successfully updated');
+      setEditingWord(null);
+      dispatch(fetchWords());
+    } catch (error) {
+      const errorMessage = getErrorMessage(error as ApiError);
+      showError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -132,11 +165,11 @@ export function WordsTable(props: WordsTableProps) {
             cell: ({ getValue }) => {
               const value = getValue();
               return (
-                <div className="flex items-center justify-end">
-                  <div className="w-[48px] text-right">
+                <div className="flex items-center">
+                  <div className="w-[40px] text-left">
                     <span>{value}%</span>
                   </div>
-                  <div className="ml-4">
+                  <div className="mb-1 ml-1.5">
                     <ProgressCircle value={value} />
                   </div>
                 </div>
@@ -148,8 +181,8 @@ export function WordsTable(props: WordsTableProps) {
       : []),
     columnHelper.accessor('_id', {
       header: '',
-      cell: ({ getValue }) => {
-        const id = getValue();
+      cell: ({ row }) => {
+        const { _id: id } = row.original;
         if (variant === 'dictionary') {
           const isDeleting = deletingWordIds.includes(id);
 
@@ -172,17 +205,18 @@ export function WordsTable(props: WordsTableProps) {
                     <Button
                       variant="ghost"
                       className="flex justify-start items-center p-1 w-full"
+                      onClick={() => setEditingWord(row.original)}
                     >
                       <Icon
                         id="#edit"
-                        className="h-5 w-5 stroke-brand-primary fill-none mr-2 mb-1"
+                        className="h-5 w-5 stroke-text-primary fill-none mr-2"
                         aria-hidden="true"
                       />
                       <span>Edit</span>
                     </Button>
                     <Button
                       variant="ghost"
-                      className="flex justify-start items-center p-1 w-full text-text-primary hover:text-text-error group"
+                      className="flex justify-start items-center p-1 w-full text-text-error hover:text-text-error"
                       onClick={() => handleDeleteWord(id)}
                       disabled={isDeleting}
                     >
@@ -191,7 +225,7 @@ export function WordsTable(props: WordsTableProps) {
                       ) : (
                         <Icon
                           id="#delete"
-                          className="h-5 w-5 stroke-brand-primary group-hover:stroke-text-error fill-none mr-2 mb-1 transition-colors duration-200"
+                          className="h-5 w-5 stroke-current fill-none mr-2"
                           aria-hidden="true"
                         />
                       )}
@@ -278,7 +312,7 @@ export function WordsTable(props: WordsTableProps) {
           ))}
         </thead>
         <tbody>
-          {Array.from({ length: 3 }).map((_, rowIndex) => (
+          {Array.from({ length: WORDS_PER_PAGE }).map((_, rowIndex) => (
             <tr key={rowIndex} className="h-[74px]">
               {Array.from({ length: columns.length }).map((_, colIndex) => (
                 <td
@@ -320,62 +354,74 @@ export function WordsTable(props: WordsTableProps) {
   }
 
   return (
-    <TableWrapper>
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header, index) => (
-              <th
-                key={header.id}
-                className={cn(
-                  baseCellStyles,
-                  tableBorderStyles,
-                  'bg-table-row text-left font-primary text-xl font-medium',
-                  columnWidths[header.id as keyof typeof columnWidths],
-                  index === 0 && 'rounded-tl-lg',
-                  index === headerGroup.headers.length - 1 && 'rounded-tr-lg',
-                  index !== 0 && 'border-l border-table-border'
-                )}
-              >
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="h-[74px]">
-            {row.getVisibleCells().map((cell, index) => (
-              <td
-                key={cell.id}
-                className={cn(
-                  baseCellStyles,
-                  tableBorderStyles,
-                  'bg-table-cell',
-                  columnWidths[variant][
-                    Object.keys(columnWidths[variant])[
-                      index
-                    ] as keyof (typeof columnWidths)[typeof variant]
-                  ],
-                  index !== 0 && 'border-l border-table-border',
-                  index === 0 &&
-                    row.index === table.getRowModel().rows.length - 1 &&
-                    'rounded-bl-lg',
-                  index === row.getVisibleCells().length - 1 &&
-                    row.index === table.getRowModel().rows.length - 1 &&
-                    'rounded-br-lg'
-                )}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </TableWrapper>
+    <>
+      <TableWrapper>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, index) => (
+                <th
+                  key={header.id}
+                  className={cn(
+                    baseCellStyles,
+                    tableBorderStyles,
+                    'bg-table-row text-left font-primary text-xl font-medium',
+                    columnWidths[header.id as keyof typeof columnWidths],
+                    index === 0 && 'rounded-tl-lg',
+                    index === headerGroup.headers.length - 1 && 'rounded-tr-lg',
+                    index !== 0 && 'border-l border-table-border'
+                  )}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="h-[74px]">
+              {row.getVisibleCells().map((cell, index) => (
+                <td
+                  key={cell.id}
+                  className={cn(
+                    baseCellStyles,
+                    tableBorderStyles,
+                    'bg-table-cell',
+                    columnWidths[variant][
+                      Object.keys(columnWidths[variant])[
+                        index
+                      ] as keyof (typeof columnWidths)[typeof variant]
+                    ],
+                    index !== 0 && 'border-l border-table-border',
+                    index === 0 &&
+                      row.index === table.getRowModel().rows.length - 1 &&
+                      'rounded-bl-lg',
+                    index === row.getVisibleCells().length - 1 &&
+                      row.index === table.getRowModel().rows.length - 1 &&
+                      'rounded-br-lg'
+                  )}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </TableWrapper>
+
+      {editingWord && (
+        <EditWordModal
+          word={editingWord}
+          isOpen={!!editingWord}
+          onClose={() => setEditingWord(null)}
+          onSubmit={handleEditWord}
+          isSubmitting={isSubmitting}
+        />
+      )}
+    </>
   );
 }
