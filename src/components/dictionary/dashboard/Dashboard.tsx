@@ -19,8 +19,8 @@ import { selectWords } from '@/redux/features/dictionary/selectors';
 import { selectRecommendWords } from '@/redux/features/recommend/selectors';
 import { selectDictionaryStatus } from '@/redux/features/dictionary/selectors';
 import { selectRecommendStatus } from '@/redux/features/recommend/selectors';
-import { showError, showSuccess } from '@/lib/utils/toast';
-import { ApiError, getErrorMessage } from '@/lib/utils/error';
+import { showSuccess } from '@/lib/utils/toast';
+import { handleApiError, ApiError } from '@/lib/utils/error';
 
 interface DashboardProps {
   variant: 'dictionary' | 'recommend';
@@ -54,15 +54,16 @@ export function Dashboard({ variant }: DashboardProps) {
   const handleAddWord = async (wordId: string) => {
     try {
       setAddingWordIds((prev) => [...prev, wordId]);
-
       await dispatch(addWordToDictionary(wordId)).unwrap();
       showSuccess('Word added to dictionary successfully');
     } catch (error) {
-      const errorMessage = getErrorMessage(error as ApiError);
       if ((error as ApiError).response?.status === 409) {
-        showError('Word already exists in your dictionary');
+        handleApiError(
+          error as ApiError,
+          'Word already exists in your dictionary'
+        );
       } else {
-        showError(errorMessage);
+        handleApiError(error as ApiError);
       }
     } finally {
       setAddingWordIds((prev) => prev.filter((id) => id !== wordId));

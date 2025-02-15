@@ -25,9 +25,8 @@ import {
   fetchStatistics,
   editWord,
 } from '@/redux/features/dictionary/operations';
-import { showSuccess, showError } from '@/lib/utils';
-import { getErrorMessage } from '@/lib/utils';
-import { ApiError } from '@/lib/utils/error';
+import { showSuccess } from '@/lib/utils';
+import { handleApiError, ApiError } from '@/lib/utils/error';
 import { EditWordModal } from './EditWordModal';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
@@ -45,7 +44,7 @@ type WordsTableProps = {
 
 const columnHelper = createColumnHelper<WordResponse>();
 
-const baseCellStyles = 'p-[22px] font-primary text-base';
+const baseCellStyles = 'p-[22px] font-primary text-xl';
 const tableBorderStyles = 'border-b border-table-border';
 
 const columnWidths = {
@@ -74,15 +73,12 @@ export function WordsTable(props: WordsTableProps) {
   const handleDeleteWord = async (wordId: string) => {
     try {
       setDeletingWordIds((prev) => [...prev, wordId]);
-
       await dispatch(deleteWord(wordId)).unwrap();
       showSuccess('Word deleted successfully');
-
       dispatch(fetchWords());
       dispatch(fetchStatistics());
     } catch (error) {
-      const errorMessage = getErrorMessage(error as ApiError);
-      showError(errorMessage);
+      handleApiError(error as ApiError);
     } finally {
       setDeletingWordIds((prev) => prev.filter((id) => id !== wordId));
     }
@@ -104,13 +100,11 @@ export function WordsTable(props: WordsTableProps) {
           },
         })
       ).unwrap();
-
       showSuccess('Word successfully updated');
       setEditingWord(null);
       dispatch(fetchWords());
     } catch (error) {
-      const errorMessage = getErrorMessage(error as ApiError);
-      showError(errorMessage);
+      handleApiError(error as ApiError);
     } finally {
       setIsSubmitting(false);
     }
@@ -272,7 +266,7 @@ export function WordsTable(props: WordsTableProps) {
   });
 
   const TableWrapper = ({ children }: { children: React.ReactNode }) => (
-    <div className="rounded-[15px] bg-background-white p-[18px] min-h-[400px]">
+    <div className="rounded-[15px] bg-background-white p-[18px] min-h-[705px]">
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-[800px] border-separate border-spacing-0">
           {children}
@@ -281,7 +275,7 @@ export function WordsTable(props: WordsTableProps) {
     </div>
   );
 
-  if (isLoading || (!words.length && !table.getRowModel().rows.length)) {
+  if (isLoading) {
     return (
       <TableWrapper>
         <thead>
@@ -313,7 +307,7 @@ export function WordsTable(props: WordsTableProps) {
         </thead>
         <tbody>
           {Array.from({ length: WORDS_PER_PAGE }).map((_, rowIndex) => (
-            <tr key={rowIndex} className="h-[74px]">
+            <tr key={rowIndex} className="h-[84px]">
               {Array.from({ length: columns.length }).map((_, colIndex) => (
                 <td
                   key={colIndex}
@@ -343,7 +337,7 @@ export function WordsTable(props: WordsTableProps) {
     );
   }
 
-  if (!isLoading && words.length === 0) {
+  if (words.length === 0) {
     return (
       <div className="flex justify-center items-center h-[400px] rounded-[15px] bg-background-white">
         <p className="font-primary text-lg text-text-secondary">

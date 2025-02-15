@@ -1,5 +1,5 @@
 import { api } from './config';
-import { ApiError, getErrorMessage } from '@/lib/utils';
+import { ApiError, handleApiError } from '@/lib/utils/error';
 import Cookies from 'js-cookie';
 
 interface AuthResponse {
@@ -21,7 +21,7 @@ export const authService = {
       this.setToken(response.data.token);
       return response.data;
     } catch (error) {
-      throw new Error(getErrorMessage(error as ApiError));
+      throw new Error(handleApiError(error as ApiError));
     }
   },
 
@@ -31,8 +31,7 @@ export const authService = {
       this.setToken(response.data.token);
       return response.data;
     } catch (error) {
-      const errorMessage = getErrorMessage(error as ApiError);
-      throw new Error(errorMessage);
+      throw new Error(handleApiError(error as ApiError));
     }
   },
 
@@ -41,7 +40,7 @@ export const authService = {
       const response = await api.get<AuthResponse>('/users/current');
       return response.data;
     } catch (error) {
-      throw new Error(getErrorMessage(error as ApiError));
+      throw handleApiError(error as ApiError);
     }
   },
 
@@ -50,14 +49,26 @@ export const authService = {
       await api.post('/users/signout');
       this.removeToken();
     } catch (error) {
-      throw new Error(getErrorMessage(error as ApiError));
+      throw new Error(handleApiError(error as ApiError));
     }
+  },
+
+  getToken() {
+    const localToken = localStorage.getItem('token');
+    const cookieToken = Cookies.get('token');
+
+    if (localToken !== cookieToken) {
+      this.removeToken();
+      return null;
+    }
+
+    return localToken;
   },
 
   setToken(token: string) {
     localStorage.setItem('token', token);
     Cookies.set('token', token, {
-      expires: 7, // 7 days
+      expires: 7,
       path: '/',
       sameSite: 'strict',
       secure: process.env.NODE_ENV === 'production',
@@ -67,9 +78,5 @@ export const authService = {
   removeToken() {
     localStorage.removeItem('token');
     Cookies.remove('token', { path: '/' });
-  },
-
-  getToken() {
-    return localStorage.getItem('token');
   },
 };

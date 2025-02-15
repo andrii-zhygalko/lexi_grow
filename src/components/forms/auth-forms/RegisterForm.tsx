@@ -14,14 +14,12 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { FormField } from '../form-fields/FormField';
 import { Input } from '../form-fields/Input';
-import { ApiError, useAppToast } from '@/lib/utils';
-import { getErrorMessage } from '@/lib/utils';
+import { ApiError, handleApiError } from '@/lib/utils';
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { showError } = useAppToast();
 
   const {
     register,
@@ -36,7 +34,7 @@ export function RegisterForm() {
       await dispatch(signup(data)).unwrap();
       router.push('/dictionary');
     } catch (error) {
-      showError(getErrorMessage(error as ApiError));
+      handleApiError(error as ApiError);
     }
   };
 

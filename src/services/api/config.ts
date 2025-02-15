@@ -22,9 +22,14 @@ api.interceptors.response.use(
     if (
       typeof window !== 'undefined' &&
       error.response?.status === 401 &&
-      !error.config.url?.includes('/auth/signin')
+      !error.config.url?.includes('/users/signin')
     ) {
       authService.removeToken();
+      sessionStorage.setItem(
+        'auth_error',
+        'Session expired. Please log in again.'
+      );
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

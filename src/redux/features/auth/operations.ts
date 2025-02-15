@@ -3,21 +3,21 @@ import { authService } from '@/services/api/auth';
 import { SignupCredentials, SigninCredentials } from '../../../lib/types/auth';
 
 export const signup = createAsyncThunk(
-  'auth/signup',
+  'users/signup',
   async (credentials: SignupCredentials) => {
     return await authService.signup(credentials);
   }
 );
 
 export const signin = createAsyncThunk(
-  'auth/signin',
+  'users/signin',
   async (credentials: SigninCredentials) => {
     return await authService.signin(credentials);
   }
 );
 
 export const getCurrentUser = createAsyncThunk(
-  'auth/getCurrentUser',
+  'users/getCurrentUser',
   async () => {
     return await authService.getCurrentUser();
   }

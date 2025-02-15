@@ -21,8 +21,7 @@ import {
 } from '@/redux/features/recommend/operations';
 import { useDebounce } from '@/lib/hooks/useDebounce';
 import { WordCategory } from '@/lib/types/dictionary';
-import { ApiError, getErrorMessage } from '@/lib/utils/error';
-import { showError } from '@/lib/utils/toast';
+import { handleApiError, ApiError } from '@/lib/utils/error';
 import { cn } from '@/lib/utils';
 import {
   selectCategories as selectDictionaryCategories,
@@ -93,12 +92,10 @@ export function Filters({ variant }: FiltersProps) {
       dispatch(fetchWords())
         .unwrap()
         .catch((error) => {
-          const errorMessage = getErrorMessage(error as ApiError);
-          showError(errorMessage);
+          handleApiError(error as ApiError);
         });
     } catch (error) {
-      const errorMessage = getErrorMessage(error as ApiError);
-      showError(errorMessage);
+      handleApiError(error as ApiError);
     }
   }, [debouncedSearch, dispatch, variant]);
 

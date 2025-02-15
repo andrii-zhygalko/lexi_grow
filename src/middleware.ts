@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('token')?.value;
 
-  if (publicPaths.some(path => pathname.startsWith(path))) {
+  if (publicPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.next();
   }
 
@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dictionary', request.url));
   }
 
-  if (!token && protectedPaths.some(path => pathname.startsWith(path))) {
+  if (!token && protectedPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

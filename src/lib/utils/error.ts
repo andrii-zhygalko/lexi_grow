@@ -1,3 +1,5 @@
+import { showError } from './toast';
+
 export type ApiError = {
   response?: {
     data?: {
@@ -23,6 +25,12 @@ export function serializeError(error: ApiError): SerializedError {
     status: error.response?.status,
     url: error.config?.url,
   };
+}
+
+export function handleApiError(error: ApiError, customMessage?: string) {
+  const errorMessage = getErrorMessage(error);
+  showError(customMessage || errorMessage);
+  return errorMessage;
 }
 
 export function getErrorMessage(error: ApiError): string {
