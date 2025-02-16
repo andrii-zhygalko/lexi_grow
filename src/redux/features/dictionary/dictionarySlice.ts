@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DictionaryState, WordCategory } from '@/lib/types/dictionary';
-import { fetchCategories, fetchWords, fetchStatistics } from './operations';
+import {
+  fetchCategories,
+  fetchWords,
+  fetchStatistics,
+  createWord,
+} from './operations';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
 type FilterValue = string | number | boolean | WordCategory | null;
@@ -84,6 +89,16 @@ const dictionarySlice = createSlice({
       })
       .addCase(fetchStatistics.fulfilled, (state, action) => {
         state.statistics = action.payload;
+      })
+      .addCase(createWord.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createWord.fulfilled, (state) => {
+        state.status = 'succeeded';
+      })
+      .addCase(createWord.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
       });
   },
 });

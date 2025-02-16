@@ -3,9 +3,11 @@ import {
   WordCategory,
   WordsResponse,
   WordResponse,
-  EditWordData,
+  EditWordFormData,
 } from '@/lib/types/dictionary';
 import { baseURL } from './config';
+import { handleApiError, ApiError } from '@/lib/utils';
+import { authService } from './auth';
 
 interface GetWordsParams {
   keyword?: string;
@@ -20,7 +22,7 @@ export const dictionaryApi = {
     return fetchWithRetry<WordCategory[]>(`${baseURL}/words/categories`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${authService.getToken()}`,
       },
     });
   },
@@ -51,7 +53,7 @@ export const dictionaryApi = {
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${authService.getToken()}`,
         },
       }
     );
@@ -63,7 +65,7 @@ export const dictionaryApi = {
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${authService.getToken()}`,
         },
       }
     );
@@ -95,7 +97,7 @@ export const dictionaryApi = {
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${authService.getToken()}`,
         },
       }
     );
@@ -104,6 +106,9 @@ export const dictionaryApi = {
   addWord: async (wordId: string) => {
     return fetchWithRetry<WordResponse>(`/words/add/${wordId}`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${authService.getToken()}`,
+      },
     });
   },
 
@@ -113,13 +118,13 @@ export const dictionaryApi = {
       {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${authService.getToken()}`,
         },
       }
     );
   },
 
-  editWord: async (wordId: string, wordData: EditWordData) => {
+  editWord: async (wordId: string, wordData: EditWordFormData) => {
     const requestBody = {
       en: wordData.en,
       ua: wordData.ua,
@@ -131,9 +136,33 @@ export const dictionaryApi = {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${authService.getToken()}`,
       },
       body: JSON.stringify(requestBody),
     });
+  },
+
+  createWord: async (wordData: {
+    en: string;
+    ua: string;
+    category: WordCategory;
+    isIrregular?: boolean;
+  }) => {
+    try {
+      const response = await fetchWithRetry<WordResponse>(
+        `${baseURL}/words/create`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authService.getToken()}`,
+          },
+          body: JSON.stringify(wordData),
+        }
+      );
+      return response;
+    } catch (error) {
+      throw handleApiError(error as ApiError);
+    }
   },
 };

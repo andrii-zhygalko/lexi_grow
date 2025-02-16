@@ -13,14 +13,21 @@ import {
   fetchWords as fetchDictionaryWords,
   fetchStatistics,
   addWordToDictionary,
+  createWord,
 } from '@/redux/features/dictionary/operations';
 import { fetchWords as fetchRecommendWords } from '@/redux/features/recommend/operations';
 import { selectWords } from '@/redux/features/dictionary/selectors';
 import { selectRecommendWords } from '@/redux/features/recommend/selectors';
-import { selectDictionaryStatus } from '@/redux/features/dictionary/selectors';
+import {
+  selectDictionaryStatus,
+  selectCategories as selectDictionaryCategories,
+} from '@/redux/features/dictionary/selectors';
 import { selectRecommendStatus } from '@/redux/features/recommend/selectors';
 import { showSuccess } from '@/lib/utils/toast';
 import { handleApiError, ApiError } from '@/lib/utils/error';
+import { AddWordModal } from '../words-table/AddWordModal';
+import { WordCategory } from '@/lib/types/dictionary';
+import { AddWordFormData } from '@/lib/schemas/dictionary/add-word';
 
 interface DashboardProps {
   variant: 'dictionary' | 'recommend';
@@ -33,6 +40,9 @@ export function Dashboard({ variant }: DashboardProps) {
   const recommendWords = useAppSelector(selectRecommendWords);
   const dictionaryStatus = useAppSelector(selectDictionaryStatus);
   const recommendStatus = useAppSelector(selectRecommendStatus);
+  const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const categories = useAppSelector(selectDictionaryCategories);
 
   useEffect(() => {
     if (variant === 'dictionary') {
@@ -70,6 +80,28 @@ export function Dashboard({ variant }: DashboardProps) {
     }
   };
 
+  const handleAddNewWord = async (data: AddWordFormData) => {
+    try {
+      setIsSubmitting(true);
+      await dispatch(
+        createWord({
+          en: data.en,
+          ua: data.ua,
+          category: data.category as WordCategory,
+          isIrregular: data.isIrregular,
+        })
+      ).unwrap();
+      showSuccess('Word added successfully');
+      setIsAddWordModalOpen(false);
+      dispatch(fetchDictionaryWords());
+      dispatch(fetchStatistics());
+    } catch (error) {
+      handleApiError(error as ApiError);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const renderWordsTable = () => {
     if (variant === 'dictionary') {
       return (
@@ -98,6 +130,7 @@ export function Dashboard({ variant }: DashboardProps) {
           {variant === 'dictionary' && (
             <Button
               variant="ghost"
+              onClick={() => setIsAddWordModalOpen(true)}
               className="p-1 font-primary text-base font-medium group"
             >
               Add word
@@ -130,6 +163,16 @@ export function Dashboard({ variant }: DashboardProps) {
         {renderWordsTable()}
         <WordsPagination className="mt-7" variant={variant} />
       </div>
+
+      {variant === 'dictionary' && (
+        <AddWordModal
+          categories={categories}
+          isOpen={isAddWordModalOpen}
+          onClose={() => setIsAddWordModalOpen(false)}
+          onSubmit={handleAddNewWord}
+          isSubmitting={isSubmitting}
+        />
+      )}
     </div>
   );
 }

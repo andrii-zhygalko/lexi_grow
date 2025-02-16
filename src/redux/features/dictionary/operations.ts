@@ -1,6 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { dictionaryApi } from '@/services/api/dictionary';
-import { DictionaryState, EditWordData } from '@/lib/types/dictionary';
+import {
+  DictionaryState,
+  EditWordFormData,
+  WordCategory,
+} from '@/lib/types/dictionary';
 import { ApiError, serializeError } from '@/lib/utils/error';
 import {
   incrementTotalCount,
@@ -86,12 +90,32 @@ export const deleteWord = createAsyncThunk(
 export const editWord = createAsyncThunk(
   'dictionary/editWord',
   async (
-    { wordId, wordData }: { wordId: string; wordData: EditWordData },
+    { wordId, wordData }: { wordId: string; wordData: EditWordFormData },
     { rejectWithValue }
   ) => {
     try {
       const response = await dictionaryApi.editWord(wordId, wordData);
       return response;
+    } catch (error) {
+      return rejectWithValue(serializeError(error as ApiError));
+    }
+  }
+);
+
+export const createWord = createAsyncThunk(
+  'dictionary/createWord',
+  async (
+    wordData: {
+      en: string;
+      ua: string;
+      category: WordCategory;
+      isIrregular?: boolean;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const data = await dictionaryApi.createWord(wordData);
+      return data;
     } catch (error) {
       return rejectWithValue(serializeError(error as ApiError));
     }

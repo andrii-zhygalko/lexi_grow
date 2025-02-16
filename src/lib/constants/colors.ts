@@ -76,7 +76,9 @@ export const colors = {
   },
   radio: {
     checked: palette.green.base,
+    checkedLight: palette.white.off,
     unchecked: palette.black.alpha20,
+    uncheckedLight: palette.white.alpha30,
   },
 } as const;
 

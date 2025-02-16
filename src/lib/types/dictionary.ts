@@ -14,11 +14,18 @@ export interface WordsResponse {
   page: number;
   perPage: number;
 }
-export interface EditWordData {
+export interface EditWordFormData {
   en: string;
   ua: string;
-  category: WordCategory;
-  isIrregular: boolean | undefined;
+  category?: WordCategory;
+  isIrregular?: boolean | undefined;
+}
+
+export interface AddWordFormData {
+  en: string;
+  ua: string;
+  category: WordCategory | null;
+  isIrregular?: boolean;
 }
 
 export type WordCategory =

@@ -1,38 +1,21 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/forms/form-fields/FormField';
 import { Input } from '@/components/forms/form-fields/Input';
 import Icon from '@/components/common/Icon';
-import { WordResponse } from '@/lib/types/dictionary';
+import { EditWordFormData, WordResponse } from '@/lib/types/dictionary';
+import { editWordSchema } from '@/lib/schemas/dictionary/edit-word';
 
 interface EditWordFormProps {
   word: WordResponse;
-  onSubmit: (data: { en: string; ua: string }) => Promise<void>;
+  onSubmit: (data: EditWordFormData) => Promise<void>;
   onCancel: () => void;
   isSubmitting: boolean;
 }
-
-const schema = yup.object().shape({
-  en: yup
-    .string()
-    .required('English word is required')
-    .matches(
-      /\b[A-Za-z'-]+(?:\s+[A-Za-z'-]+)*\b/,
-      'Please enter a valid English word'
-    ),
-  ua: yup
-    .string()
-    .required('Ukrainian word is required')
-    .matches(
-      /^(?![A-Za-z])[А-ЯІЄЇҐґа-яієїʼ\s]+$/u,
-      'Please enter a valid Ukrainian word'
-    ),
-});
 
 export function EditWordForm({
   word,
@@ -45,7 +28,7 @@ export function EditWordForm({
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(editWordSchema),
     defaultValues: {
       en: word.en,
       ua: word.ua,
@@ -56,10 +39,28 @@ export function EditWordForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-[20px]">
       <div className="flex items-center gap-8">
         <div className="w-[354px]">
-          <FormField error={errors.en?.message}>
+          <FormField error={errors.ua?.message}>
             <Input
               variant="light"
               placeholder="Enter word"
+              error={!!errors.ua}
+              {...register('ua')}
+            />
+          </FormField>
+        </div>
+        <div className="flex items-center">
+          <Icon id="#flag-ukraine" className="h-8 w-8" aria-hidden="true" />
+          <span className="ml-2 font-primary text-base font-medium leading-6 text-text-inverse">
+            Ukrainian
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-8">
+        <div className="w-[354px]">
+          <FormField error={errors.en?.message}>
+            <Input
+              variant="light"
+              placeholder="Enter translation"
               error={!!errors.en}
               {...register('en')}
             />
@@ -76,26 +77,6 @@ export function EditWordForm({
           </span>
         </div>
       </div>
-
-      <div className="flex items-center gap-8">
-        <div className="w-[354px]">
-          <FormField error={errors.ua?.message}>
-            <Input
-              variant="light"
-              placeholder="Enter translation"
-              error={!!errors.ua}
-              {...register('ua')}
-            />
-          </FormField>
-        </div>
-        <div className="flex items-center">
-          <Icon id="#flag-ukraine" className="h-8 w-8" aria-hidden="true" />
-          <span className="ml-2 font-primary text-base font-medium leading-6 text-text-inverse">
-            Ukrainian
-          </span>
-        </div>
-      </div>
-
       <div className="mt-8 flex gap-2.5">
         <Button
           type="submit"
