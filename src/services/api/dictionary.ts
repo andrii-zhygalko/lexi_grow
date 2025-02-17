@@ -4,22 +4,13 @@ import {
   WordsResponse,
   WordResponse,
   EditWordFormData,
+  GetWordsParams,
 } from '@/lib/types/dictionary';
-import { baseURL } from './config';
-import { handleApiError, ApiError } from '@/lib/utils';
 import { authService } from './auth';
-
-interface GetWordsParams {
-  keyword?: string;
-  category?: WordCategory;
-  isIrregular?: boolean;
-  page?: number;
-  limit?: number;
-}
 
 export const dictionaryApi = {
   getCategories: async (): Promise<WordCategory[]> => {
-    return fetchWithRetry<WordCategory[]>(`${baseURL}/words/categories`, {
+    return fetchWithRetry<WordCategory[]>('/words/categories', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${authService.getToken()}`,
@@ -48,27 +39,21 @@ export const dictionaryApi = {
     params.append('page', String(page));
     params.append('limit', String(limit));
 
-    return fetchWithRetry<WordsResponse>(
-      `${baseURL}/words/own?${params.toString()}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${authService.getToken()}`,
-        },
-      }
-    );
+    return fetchWithRetry<WordsResponse>(`/words/own?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authService.getToken()}`,
+      },
+    });
   },
 
   getStatistics: async (): Promise<{ totalCount: number }> => {
-    return fetchWithRetry<{ totalCount: number }>(
-      `${baseURL}/words/statistics`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${authService.getToken()}`,
-        },
-      }
-    );
+    return fetchWithRetry<{ totalCount: number }>('/words/statistics', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authService.getToken()}`,
+      },
+    });
   },
 
   getAllWords: async ({
@@ -92,15 +77,12 @@ export const dictionaryApi = {
     params.append('page', String(page));
     params.append('limit', String(limit));
 
-    return fetchWithRetry<WordsResponse>(
-      `${baseURL}/words/all?${params.toString()}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${authService.getToken()}`,
-        },
-      }
-    );
+    return fetchWithRetry<WordsResponse>(`/words/all?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authService.getToken()}`,
+      },
+    });
   },
 
   addWord: async (wordId: string) => {
@@ -114,7 +96,7 @@ export const dictionaryApi = {
 
   deleteWord: async (wordId: string) => {
     return fetchWithRetry<{ message: string; id: string }>(
-      `${baseURL}/words/delete/${wordId}`,
+      `/words/delete/${wordId}`,
       {
         method: 'DELETE',
         headers: {
@@ -125,20 +107,13 @@ export const dictionaryApi = {
   },
 
   editWord: async (wordId: string, wordData: EditWordFormData) => {
-    const requestBody = {
-      en: wordData.en,
-      ua: wordData.ua,
-      category: wordData.category,
-      isIrregular: wordData.isIrregular,
-    };
-
-    return fetchWithRetry<WordResponse>(`${baseURL}/words/edit/${wordId}`, {
+    return fetchWithRetry<WordResponse>(`/words/edit/${wordId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authService.getToken()}`,
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify(wordData),
     });
   },
 
@@ -148,21 +123,13 @@ export const dictionaryApi = {
     category: WordCategory;
     isIrregular?: boolean;
   }) => {
-    try {
-      const response = await fetchWithRetry<WordResponse>(
-        `${baseURL}/words/create`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authService.getToken()}`,
-          },
-          body: JSON.stringify(wordData),
-        }
-      );
-      return response;
-    } catch (error) {
-      throw handleApiError(error as ApiError);
-    }
+    return fetchWithRetry<WordResponse>('/words/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authService.getToken()}`,
+      },
+      body: JSON.stringify(wordData),
+    });
   },
 };

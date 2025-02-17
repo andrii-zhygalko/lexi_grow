@@ -1,56 +1,28 @@
 import { api } from './config';
-import { ApiError, handleApiError } from '@/lib/utils/error';
 import Cookies from 'js-cookie';
-
-interface AuthResponse {
-  email: string;
-  name: string;
-  token: string;
-}
-
-interface AuthCredentials {
-  email: string;
-  password: string;
-  name?: string;
-}
+import type { AuthResponse, AuthCredentials } from '@/lib/types/auth';
 
 export const authService = {
   async signup(data: AuthCredentials) {
-    try {
-      const response = await api.post<AuthResponse>('/users/signup', data);
-      this.setToken(response.data.token);
-      return response.data;
-    } catch (error) {
-      throw new Error(handleApiError(error as ApiError));
-    }
+    const response = await api.post<AuthResponse>('/users/signup', data);
+    this.setToken(response.data.token);
+    return response.data;
   },
 
   async signin(data: Omit<AuthCredentials, 'name'>) {
-    try {
-      const response = await api.post<AuthResponse>('/users/signin', data);
-      this.setToken(response.data.token);
-      return response.data;
-    } catch (error) {
-      throw new Error(handleApiError(error as ApiError));
-    }
+    const response = await api.post<AuthResponse>('/users/signin', data);
+    this.setToken(response.data.token);
+    return response.data;
   },
 
   async getCurrentUser() {
-    try {
-      const response = await api.get<AuthResponse>('/users/current');
-      return response.data;
-    } catch (error) {
-      throw handleApiError(error as ApiError);
-    }
+    const response = await api.get<AuthResponse>('/users/current');
+    return response.data;
   },
 
   async signout() {
-    try {
-      await api.post('/users/signout');
-      this.removeToken();
-    } catch (error) {
-      throw new Error(handleApiError(error as ApiError));
-    }
+    await api.post('/users/signout');
+    this.removeToken();
   },
 
   getToken() {

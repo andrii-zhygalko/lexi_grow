@@ -5,13 +5,9 @@ import {
   EditWordFormData,
   WordCategory,
 } from '@/lib/types/dictionary';
-import { ApiError, serializeError } from '@/lib/utils/error';
-import {
-  incrementTotalCount,
-  decrementTotalCount,
-} from '@/redux/features/dictionary/dictionarySlice';
-
-const WORDS_PER_PAGE = 7;
+import { ApiError, handleApiError, serializeError } from '@/lib/utils/error';
+import { incrementTotalCount, decrementTotalCount } from './dictionarySlice';
+import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
 export const fetchCategories = createAsyncThunk(
   'dictionary/fetchCategories',
@@ -19,6 +15,7 @@ export const fetchCategories = createAsyncThunk(
     try {
       return await dictionaryApi.getCategories();
     } catch (error) {
+      handleApiError(error as ApiError);
       return rejectWithValue(serializeError(error as ApiError));
     }
   }
@@ -39,6 +36,7 @@ export const fetchWords = createAsyncThunk(
         limit: WORDS_PER_PAGE,
       });
     } catch (error) {
+      handleApiError(error as ApiError);
       return rejectWithValue(serializeError(error as ApiError));
     }
   }
@@ -50,6 +48,7 @@ export const fetchStatistics = createAsyncThunk(
     try {
       return await dictionaryApi.getStatistics();
     } catch (error) {
+      handleApiError(error as ApiError);
       return rejectWithValue(serializeError(error as ApiError));
     }
   }
@@ -63,10 +62,12 @@ export const addWordToDictionary = createAsyncThunk(
       dispatch(incrementTotalCount());
       return response;
     } catch (error) {
-      if ((error as ApiError).response?.status !== 409) {
+      const apiError = error as ApiError;
+      if (apiError.response?.status !== 409) {
         dispatch(decrementTotalCount());
       }
-      return rejectWithValue(serializeError(error as ApiError));
+      handleApiError(apiError);
+      return rejectWithValue(serializeError(apiError));
     }
   }
 );
@@ -79,10 +80,12 @@ export const deleteWord = createAsyncThunk(
       dispatch(decrementTotalCount());
       return response;
     } catch (error) {
-      if ((error as ApiError).response?.status !== 404) {
+      const apiError = error as ApiError;
+      if (apiError.response?.status !== 404) {
         dispatch(incrementTotalCount());
       }
-      return rejectWithValue(serializeError(error as ApiError));
+      handleApiError(apiError);
+      return rejectWithValue(serializeError(apiError));
     }
   }
 );
@@ -94,9 +97,9 @@ export const editWord = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await dictionaryApi.editWord(wordId, wordData);
-      return response;
+      return await dictionaryApi.editWord(wordId, wordData);
     } catch (error) {
+      handleApiError(error as ApiError);
       return rejectWithValue(serializeError(error as ApiError));
     }
   }
@@ -114,9 +117,9 @@ export const createWord = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const data = await dictionaryApi.createWord(wordData);
-      return data;
+      return await dictionaryApi.createWord(wordData);
     } catch (error) {
+      handleApiError(error as ApiError);
       return rejectWithValue(serializeError(error as ApiError));
     }
   }

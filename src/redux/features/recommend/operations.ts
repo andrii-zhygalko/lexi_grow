@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { dictionaryApi } from '@/services/api/dictionary';
 import { RecommendState } from '@/lib/types/recommend';
-import { ApiError, serializeError } from '@/lib/utils/error';
+import { ApiError, handleApiError, serializeError } from '@/lib/utils/error';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
 export const fetchWords = createAsyncThunk(
@@ -19,6 +19,7 @@ export const fetchWords = createAsyncThunk(
         limit: WORDS_PER_PAGE,
       });
     } catch (error) {
+      handleApiError(error as ApiError);
       return rejectWithValue(serializeError(error as ApiError));
     }
   }
@@ -30,6 +31,7 @@ export const fetchCategories = createAsyncThunk(
     try {
       return await dictionaryApi.getCategories();
     } catch (error) {
+      handleApiError(error as ApiError);
       return rejectWithValue(serializeError(error as ApiError));
     }
   }

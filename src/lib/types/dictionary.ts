@@ -28,6 +28,14 @@ export interface AddWordFormData {
   isIrregular?: boolean;
 }
 
+export interface GetWordsParams {
+  keyword?: string;
+  category?: WordCategory;
+  isIrregular?: boolean;
+  page?: number;
+  limit?: number;
+}
+
 export type WordCategory =
   | 'verb'
   | 'participle'
