@@ -1,5 +1,3 @@
-'use client';
-
 import { useAppSelector } from '@/redux/hooks';
 import { selectStatistics } from '@/redux/features/dictionary/selectors';
 

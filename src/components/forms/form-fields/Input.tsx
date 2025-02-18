@@ -28,10 +28,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             'focus:border-border-inverse focus:outline-none focus:ring-1 focus:ring-border-inputAccentLight',
           ],
           error && [
-            'border-status-errorDark',
-            'hover:border-status-errorDark',
-            'focus:border-status-errorDark focus:ring-status-errorDark',
+            'border-status-error',
+            'hover:border-status-error',
+            'focus:border-status-error focus:ring-status-error',
           ],
+          variant === 'light' &&
+            error && [
+              'border-status-errorDark',
+              'hover:border-status-errorDark',
+              'focus:border-status-errorDark focus:ring-status-errorDark',
+            ],
           !error &&
             props.value && [
               'border-status-success',

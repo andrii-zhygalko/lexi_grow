@@ -1,16 +1,14 @@
-'use client';
-
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { EditWordForm } from '@/components/forms/dictionary-forms/EditWordForm';
-import { WordResponse } from '@/lib/types/dictionary';
+import { EditWordFormData, WordResponse } from '@/lib/types/dictionary';
 
 interface EditWordModalProps {
   word: WordResponse;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { en: string; ua: string }) => Promise<void>;
+  onSubmit: (data: EditWordFormData) => Promise<void>;
   isSubmitting: boolean;
 }
 
@@ -21,13 +19,6 @@ export function EditWordModal({
   onSubmit,
   isSubmitting,
 }: EditWordModalProps) {
-  const handleSubmit = async (data: { en: string; ua: string }) => {
-    await onSubmit({
-      en: data.en,
-      ua: data.ua,
-    });
-  };
-
   return (
     <Modal
       open={isOpen}
@@ -51,7 +42,7 @@ export function EditWordModal({
 
       <EditWordForm
         word={word}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
         onCancel={onClose}
         isSubmitting={isSubmitting}
       />

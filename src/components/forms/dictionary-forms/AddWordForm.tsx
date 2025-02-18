@@ -1,5 +1,4 @@
-'use client';
-
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Loader2 } from 'lucide-react';
@@ -30,6 +29,8 @@ export function AddWordForm({
   onCancel,
   isSubmitting,
 }: AddWordFormProps) {
+  const [selectedRadio, setSelectedRadio] = useState<boolean | undefined>();
+
   const {
     register,
     handleSubmit,
@@ -51,29 +52,36 @@ export function AddWordForm({
   const handleCategoryChange = (value: string) => {
     setValue('category', value as WordCategory, { shouldValidate: true });
     if (value !== 'verb') {
-      setValue('isIrregular', undefined, { shouldValidate: true });
+      setValue('isIrregular', undefined);
+      setSelectedRadio(undefined);
     }
   };
 
+  const handleRadioChange = (value: boolean) => {
+    setSelectedRadio(value);
+    setValue('isIrregular', value);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
       <div className="relative">
         <Select
           value={selectedCategory || ''}
           onValueChange={handleCategoryChange}
         >
           <SelectTrigger
-            className="h-12 rounded-[15px] border-border-inputLight px-6 py-3 font-primary text-base font-medium text-text-inverse"
+            variant="modal"
+            className="max-w-[210px] rounded-[15px]"
             aria-label="Select word category"
           >
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
-          <SelectContent className="rounded-[15px] bg-background-white p-6 shadow-lg">
+          <SelectContent className="max-w-[204px] bg-background-white shadow-lg">
             {categories.map((category) => (
               <SelectItem
                 key={category}
                 value={category}
-                className="mb-2 font-primary text-base font-medium text-text-secondary hover:text-brand-primary"
+                className="mb-1 font-primary text-base font-medium text-text-secondary hover:text-brand-primary"
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </SelectItem>
@@ -81,60 +89,60 @@ export function AddWordForm({
           </SelectContent>
         </Select>
         {errors.category && (
-          <p className="mt-1 text-sm text-text-error">
+          <p className="absolute left-0 mt-1 text-xs text-status-errorDark">
             {errors.category.message}
+          </p>
+        )}
+        {selectedCategory === 'verb' && (
+          <div
+            className="absolute left-0 -bottom-8 flex gap-4"
+            role="radiogroup"
+            aria-label="Verb type"
+          >
+            {[
+              { label: 'Regular', value: false },
+              { label: 'Irregular', value: true },
+            ].map(({ label, value }) => (
+              <label
+                key={label}
+                className="group flex cursor-pointer items-center gap-2"
+              >
+                <div className="relative h-[18px] w-[18px]">
+                  <input
+                    type="radio"
+                    {...register('isIrregular')}
+                    value={value.toString()}
+                    onChange={() => handleRadioChange(value)}
+                    checked={selectedRadio === value}
+                    className="peer sr-only"
+                    aria-checked={selectedRadio === value}
+                  />
+                  <Icon
+                    id="#radio-btn"
+                    className="absolute inset-0 size-[18px] fill-none stroke-[1.5] stroke-radio-uncheckedLight group-hover:stroke-radio-hoverLight transition-colors duration-200 peer-checked:opacity-0"
+                  />
+                  <Icon
+                    id="#radio-btn-checked"
+                    className="absolute scale-125 inset-0 size-[18px] stroke-[3] fill-radio-checkedLight stroke-radio-checked opacity-0 transition-opacity duration-200 peer-checked:opacity-100"
+                  />
+                </div>
+                <span className="font-primary text-base font-normal text-text-inverse">
+                  {label}
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
+        {errors.isIrregular && (
+          <p className="absolute left-0 -bottom-12 text-xs text-status-errorDark">
+            {errors.isIrregular.message}
           </p>
         )}
       </div>
 
-      {selectedCategory === 'verb' && (
-        <div
-          className="absolute left-0 mt-2 flex gap-4"
-          role="radiogroup"
-          aria-label="Verb type"
-        >
-          {[
-            { label: 'Regular', value: false },
-            { label: 'Irregular', value: true },
-          ].map(({ label, value }) => (
-            <label
-              key={label}
-              className="group flex cursor-pointer items-center gap-2"
-            >
-              <div className="relative h-[18px] w-[18px]">
-                <input
-                  type="radio"
-                  {...register('isIrregular')}
-                  value={String(value)}
-                  checked={watch('isIrregular') === value}
-                  className="peer sr-only"
-                  aria-checked={watch('isIrregular') === value}
-                />
-                <Icon
-                  id="#radio-btn"
-                  className="absolute inset-0 size-[18px] fill-none stroke-[1.5] stroke-radio-uncheckedLight transition-colors duration-200 peer-checked:opacity-0"
-                />
-                <Icon
-                  id="#radio-btn-checked"
-                  className="absolute inset-0 size-[18px] scale-125 fill-radio-checkedLight stroke-[3] stroke-radio-checked opacity-0 transition-opacity duration-200 peer-checked:opacity-100"
-                />
-              </div>
-              <span className="font-primary text-base font-normal text-text-inverse">
-                {label}
-              </span>
-            </label>
-          ))}
-          {errors.isIrregular && (
-            <p className="mt-1 text-sm text-text-error">
-              {errors.isIrregular.message}
-            </p>
-          )}
-        </div>
-      )}
-
-      <div className="flex items-center gap-8">
+      <div className="mt-[50px] flex items-center gap-8">
         <div className="w-[354px]">
-          <FormField error={errors.ua?.message}>
+          <FormField error={errors.ua?.message} variant="modal">
             <Input
               variant="light"
               placeholder="Enter word"
@@ -150,9 +158,9 @@ export function AddWordForm({
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-8">
+      <div className="mt-6 flex items-center gap-8">
         <div className="w-[354px]">
-          <FormField error={errors.en?.message}>
+          <FormField error={errors.en?.message} variant="modal">
             <Input
               variant="light"
               placeholder="Enter translation"
@@ -175,11 +183,11 @@ export function AddWordForm({
       <div className="mt-8 flex justify-end gap-4">
         <Button
           type="submit"
-          className="flex-1 h-[56px] rounded-[30px] bg-background-white hover:bg-background-secondary hover:text-brand-primary font-primary text-lg font-bold leading-7 text-text-primary relative"
+          className="relative flex-1 h-[56px] rounded-[30px] bg-background-white hover:bg-background-secondary hover:text-brand-primary font-primary text-lg font-bold leading-7 text-text-primary"
           disabled={isSubmitting}
         >
           {isSubmitting && (
-            <Loader2 className="mb-1 h-5 w-5 animate-spin shrink-0 absolute left-20 " />
+            <Loader2 className="absolute left-20 mb-1 h-5 w-5 animate-spin shrink-0" />
           )}
           Add
         </Button>

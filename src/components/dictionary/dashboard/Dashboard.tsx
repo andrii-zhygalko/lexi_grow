@@ -26,8 +26,7 @@ import { selectRecommendStatus } from '@/redux/features/recommend/selectors';
 import { showSuccess } from '@/lib/utils/toast';
 import { handleApiError, ApiError } from '@/lib/utils/error';
 import { AddWordModal } from '../words-table/AddWordModal';
-import { WordCategory } from '@/lib/types/dictionary';
-import { AddWordFormData } from '@/lib/schemas/dictionary/add-word';
+import { WordCategory, AddWordFormData } from '@/lib/types/dictionary';
 
 interface DashboardProps {
   variant: 'dictionary' | 'recommend';

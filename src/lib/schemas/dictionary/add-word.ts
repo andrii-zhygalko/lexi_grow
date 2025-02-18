@@ -26,7 +26,14 @@ export const addWordSchema = yup.object().shape({
     .required('Category is required') as yup.Schema<WordCategory | null>,
   isIrregular: yup.boolean().when('category', {
     is: 'verb',
-    then: (schema) => schema.required('Please select verb type'),
+    then: (schema) =>
+      schema.required('Please select verb type').transform((value) => {
+        if (value === 'true') return true;
+        if (value === 'false') return false;
+        return value;
+      }),
     otherwise: (schema) => schema.optional(),
   }),
 });
+
+export type AddWordFormData = yup.InferType<typeof addWordSchema>;

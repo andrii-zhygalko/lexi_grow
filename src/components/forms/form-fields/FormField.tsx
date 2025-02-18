@@ -8,9 +8,12 @@ type FormControlElement =
   | HTMLTextAreaElement
   | HTMLSelectElement;
 
+type FormFieldVariant = 'default' | 'modal';
+
 interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
   label?: string;
   error?: string;
+  variant?: FormFieldVariant;
   children: React.ReactElement<{
     id?: string;
     'aria-describedby'?: string;
@@ -19,7 +22,10 @@ interface FormFieldProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
-  ({ label, error, children, className, ...props }, ref) => {
+  (
+    { label, error, children, className, variant = 'default', ...props },
+    ref
+  ) => {
     const fieldId = children.props.id;
     const errorId = fieldId ? `${fieldId}-error` : undefined;
 
@@ -28,7 +34,8 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         {label && fieldId && (
           <Label
             htmlFor={fieldId}
-            className='font-primary text-base leading-6 text-text-primary'>
+            className="font-primary text-base leading-6 text-text-primary"
+          >
             {label}
           </Label>
         )}
@@ -46,15 +53,26 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         {error && (
           <div
             id={errorId}
-            role='alert'
-            aria-live='polite'
-            className='absolute -bottom-5 left-0 flex items-center gap-1'>
+            role="alert"
+            aria-live="polite"
+            className="absolute -bottom-5 left-0 flex items-center gap-1"
+          >
             <Icon
-              id='#error'
-              className='h-[18px] w-[18px] fill-status-error'
-              aria-hidden='true'
+              id="#error"
+              className={cn(
+                'h-[18px] w-[18px]',
+                variant === 'default' && 'fill-status-error',
+                variant === 'modal' && 'hidden'
+              )}
+              aria-hidden="true"
             />
-            <span className='font-primary text-xs leading-[18px] tracking-[0.12px] text-status-error -mb-0.5'>
+            <span
+              className={cn(
+                'font-primary text-xs leading-[18px] tracking-[0.12px] -mb-0.5',
+                variant === 'default' && 'text-status-error',
+                variant === 'modal' && 'text-status-errorDark'
+              )}
+            >
               {error}
             </span>
           </div>

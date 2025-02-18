@@ -1,11 +1,8 @@
-'use client';
-
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { AddWordForm } from '@/components/forms/dictionary-forms/AddWordForm';
-import { WordCategory } from '@/lib/types/dictionary';
-import { AddWordFormData } from '@/lib/schemas/dictionary/add-word';
+import { WordCategory, AddWordFormData } from '@/lib/types/dictionary';
 
 interface AddWordModalProps {
   categories: WordCategory[];
@@ -26,6 +23,8 @@ export function AddWordModal({
     <Modal
       open={isOpen}
       onOpenChange={onClose}
+      title="Add Word"
+      description="Create new word translation"
       className="w-[628px]"
       contentClassName="rounded-[30px] shadow-lg bg-brand-primary px-16 py-12 relative"
     >

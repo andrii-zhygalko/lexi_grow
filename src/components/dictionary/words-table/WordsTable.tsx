@@ -1,5 +1,3 @@
-'use client';
-
 import {
   createColumnHelper,
   flexRender,
@@ -9,7 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { ProgressCircle } from '@/components/ui/progress-circle';
-import { WordResponse } from '@/lib/types/dictionary';
+import { EditWordFormData, WordResponse } from '@/lib/types/dictionary';
 import {
   Popover,
   PopoverContent,
@@ -84,7 +82,7 @@ export function WordsTable(props: WordsTableProps) {
     }
   };
 
-  const handleEditWord = async (data: { en: string; ua: string }) => {
+  const handleEditWord = async (data: EditWordFormData) => {
     if (!editingWord) return;
 
     try {

@@ -1,5 +1,3 @@
-'use client';
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Loader2 } from 'lucide-react';
@@ -36,10 +34,10 @@ export function EditWordForm({
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-[20px]">
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center gap-8">
         <div className="w-[354px]">
-          <FormField error={errors.ua?.message}>
+          <FormField error={errors.ua?.message} variant="modal">
             <Input
               variant="light"
               placeholder="Enter word"
@@ -55,9 +53,9 @@ export function EditWordForm({
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-8">
+      <div className="mt-6 flex items-center gap-8">
         <div className="w-[354px]">
-          <FormField error={errors.en?.message}>
+          <FormField error={errors.en?.message} variant="modal">
             <Input
               variant="light"
               placeholder="Enter translation"

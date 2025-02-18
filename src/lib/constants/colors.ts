@@ -79,6 +79,7 @@ export const colors = {
     checkedLight: palette.white.off,
     unchecked: palette.black.alpha20,
     uncheckedLight: palette.white.alpha30,
+    hoverLight: palette.white.off,
   },
 } as const;
 
