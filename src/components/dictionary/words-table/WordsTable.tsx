@@ -158,7 +158,7 @@ export function WordsTable(props: WordsTableProps) {
               const value = getValue();
               return (
                 <div className="flex items-center">
-                  <div className="w-[40px] text-left">
+                  <div className="w-[48px] text-left">
                     <span>{value}%</span>
                   </div>
                   <div className="mb-1 ml-1.5">
@@ -201,7 +201,7 @@ export function WordsTable(props: WordsTableProps) {
                     >
                       <Icon
                         id="#edit"
-                        className="h-5 w-5 stroke-text-primary fill-none mr-2"
+                        className="mb-1 h-5 w-5 stroke-text-primary fill-none mr-2"
                         aria-hidden="true"
                       />
                       <span>Edit</span>
@@ -217,7 +217,7 @@ export function WordsTable(props: WordsTableProps) {
                       ) : (
                         <Icon
                           id="#delete"
-                          className="h-5 w-5 stroke-current fill-none mr-2"
+                          className="mb-1 h-5 w-5 stroke-current fill-none mr-2"
                           aria-hidden="true"
                         />
                       )}
@@ -236,7 +236,7 @@ export function WordsTable(props: WordsTableProps) {
         return (
           <Button
             variant="ghost"
-            className="flex items-center gap-2 font-primary text-base font-medium text-text-primary transition-colors duration-200 hover:text-brand-primary h-10"
+            className="flex items-center gap-2 font-primary text-base font-medium text-text-primary transition-colors duration-200 hover:text-brand-primary h-10 group"
             onClick={() => variant === 'recommend' && props.onWordAdd(id)}
             disabled={isAdding}
           >
@@ -246,7 +246,7 @@ export function WordsTable(props: WordsTableProps) {
             ) : (
               <Icon
                 id="#arrow-right"
-                className="h-5 w-5 stroke-brand-primary fill-none shrink-0"
+                className="h-5 w-5 stroke-brand-primary fill-none shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
             )}

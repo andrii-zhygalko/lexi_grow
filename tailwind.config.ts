@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 import { colors } from './src/lib/constants/colors';
 import animate from 'tailwindcss-animate';
+import tailwindScrollbar from 'tailwind-scrollbar';
 
 const config: Config = {
   content: [
@@ -87,7 +88,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, tailwindScrollbar({ nocompatible: true })],
 } as const;
 
 export default config;

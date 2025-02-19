@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -8,6 +9,8 @@ import {
   DialogOverlay,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import Icon from './Icon';
 
 interface ModalProps {
   open: boolean;
@@ -40,7 +43,20 @@ export const Modal = ({
           className
         )}
       >
-        <DialogHeader>
+        <DialogHeader className="flex-shrink-0">
+          <DialogClose asChild>
+            <Button
+              variant="ghost"
+              className="absolute right-5 top-5 p-0 group z-10"
+            >
+              <Icon
+                id="#close"
+                className="h-8 w-8 stroke-text-inverse fill-none group-hover:scale-110 transition-scale duration-200"
+                aria-hidden="true"
+              />
+              <span className="sr-only">Close</span>
+            </Button>
+          </DialogClose>
           <DialogTitle className="sr-only">{title}</DialogTitle>
           {description && (
             <DialogDescription className="sr-only">

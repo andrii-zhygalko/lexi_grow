@@ -1,6 +1,4 @@
 import { Modal } from '@/components/common/Modal';
-import { Button } from '@/components/ui/button';
-import Icon from '@/components/common/Icon';
 import { EditWordForm } from '@/components/forms/dictionary-forms/EditWordForm';
 import { EditWordFormData, WordResponse } from '@/lib/types/dictionary';
 
@@ -28,18 +26,6 @@ export function EditWordModal({
       className="w-[628px]"
       contentClassName="rounded-[30px] shadow-lg bg-brand-primary p-16 relative"
     >
-      <Button
-        variant="ghost"
-        className="absolute right-5 top-5 p-0 group"
-        onClick={onClose}
-      >
-        <Icon
-          id="#close"
-          className="h-8 w-8 stroke-text-inverse fill-none group-hover:scale-110 transition-scale duration-200"
-          aria-hidden="true"
-        />
-      </Button>
-
       <EditWordForm
         word={word}
         onSubmit={onSubmit}

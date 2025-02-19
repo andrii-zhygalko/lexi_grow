@@ -1,6 +1,4 @@
 import { Modal } from '@/components/common/Modal';
-import { Button } from '@/components/ui/button';
-import Icon from '@/components/common/Icon';
 import { AddWordForm } from '@/components/forms/dictionary-forms/AddWordForm';
 import { WordCategory, AddWordFormData } from '@/lib/types/dictionary';
 
@@ -28,18 +26,6 @@ export function AddWordModal({
       className="w-[628px]"
       contentClassName="rounded-[30px] shadow-lg bg-brand-primary px-16 py-12 relative"
     >
-      <Button
-        variant="ghost"
-        className="absolute right-5 top-5 p-0 group"
-        onClick={onClose}
-      >
-        <Icon
-          id="#close"
-          className="h-8 w-8 stroke-text-inverse fill-none group-hover:scale-110 transition-scale duration-200"
-          aria-hidden="true"
-        />
-      </Button>
-
       <h2 className="font-primary text-[40px] font-semibold leading-[48px] tracking-[-0.8px] text-text-inverse">
         Add word
       </h2>

@@ -37,7 +37,7 @@ export function UserBar() {
         Log out
         <Icon
           id="#arrow-right-logout"
-          className="mb-1.5 ml-1.5 h-4 w-4 stroke-text-primary fill-none transition-transform duration-200 group-hover:translate-x-1"
+          className="mb-1.5 ml-1.5 h-4 w-4 stroke-text-primary fill-none transition-all duration-200  group-hover:stroke-brand-primary group-hover:translate-x-0.5"
           aria-hidden="true"
         />
       </Button>

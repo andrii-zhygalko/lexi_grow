@@ -27,6 +27,7 @@ import { showSuccess } from '@/lib/utils/toast';
 import { handleApiError, ApiError } from '@/lib/utils/error';
 import { AddWordModal } from '../words-table/AddWordModal';
 import { WordCategory, AddWordFormData } from '@/lib/types/dictionary';
+import { useSearchParams } from 'next/navigation';
 
 interface DashboardProps {
   variant: 'dictionary' | 'recommend';
@@ -34,12 +35,15 @@ interface DashboardProps {
 
 export function Dashboard({ variant }: DashboardProps) {
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
   const [addingWordIds, setAddingWordIds] = useState<string[]>([]);
   const dictionaryWords = useAppSelector(selectWords);
   const recommendWords = useAppSelector(selectRecommendWords);
   const dictionaryStatus = useAppSelector(selectDictionaryStatus);
   const recommendStatus = useAppSelector(selectRecommendStatus);
-  const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
+  const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(
+    searchParams.get('openAddWord') === 'true'
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const categories = useAppSelector(selectDictionaryCategories);
 
@@ -51,6 +55,10 @@ export function Dashboard({ variant }: DashboardProps) {
     }
     dispatch(fetchStatistics());
   }, [dispatch, variant]);
+
+  useEffect(() => {
+    setIsAddWordModalOpen(searchParams.get('openAddWord') === 'true');
+  }, [searchParams]);
 
   const isLoading =
     variant === 'dictionary'
@@ -99,6 +107,13 @@ export function Dashboard({ variant }: DashboardProps) {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('openAddWord');
+    window.history.replaceState({}, '', url);
+    setIsAddWordModalOpen(false);
   };
 
   const renderWordsTable = () => {
@@ -167,7 +182,7 @@ export function Dashboard({ variant }: DashboardProps) {
         <AddWordModal
           categories={categories}
           isOpen={isAddWordModalOpen}
-          onClose={() => setIsAddWordModalOpen(false)}
+          onClose={handleCloseModal}
           onSubmit={handleAddNewWord}
           isSubmitting={isSubmitting}
         />
