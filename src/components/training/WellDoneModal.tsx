@@ -31,13 +31,10 @@ export function WellDoneModal({
       open={isOpen}
       onOpenChange={handleClose}
       title="Well done"
-      description="Training results"
-      contentClassName="rounded-[30px] shadow-lg bg-brand-primary px-16 py-12 relative"
+      description="Training results summary"
+      hideDescription={true}
+      className="[&_h2]:text-center"
     >
-      <h2 className="text-center font-primary text-[40px] font-semibold leading-[48px] tracking-[-0.8px] text-text-inverse">
-        Well done
-      </h2>
-
       <div className="mt-7 flex gap-16">
         <div className="flex-1">
           <p className="font-primary text-base font-normal leading-6 text-text-inverse/50">

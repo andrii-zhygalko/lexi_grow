@@ -15,11 +15,14 @@ import Icon from './Icon';
 interface ModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  title?: string;
+  title: string;
   description?: string;
+  background?: string;
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
+  hideTitle?: boolean;
+  hideDescription?: boolean;
 }
 
 export const Modal = ({
@@ -27,9 +30,12 @@ export const Modal = ({
   onOpenChange,
   title,
   description,
+  background = 'bg-brand-primary',
   children,
   className,
   contentClassName,
+  hideTitle = false,
+  hideDescription = false,
 }: ModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -37,34 +43,68 @@ export const Modal = ({
       <DialogContent
         className={cn(
           'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
-          'p-0 border-0 bg-transparent',
+          'p-0 border-0',
           'data-[state=open]:duration-200',
           '[&>button]:hidden',
+          'max-h-[90vh] flex flex-col',
+          'rounded-[30px]',
+          'overflow-hidden',
+          background,
           className
         )}
       >
-        <DialogHeader className="flex-shrink-0">
-          <DialogClose asChild>
-            <Button
-              variant="ghost"
-              className="absolute right-5 top-5 p-0 group z-10"
+        <div className={cn('flex-shrink-0 ', contentClassName)}>
+          <DialogHeader className="relative px-16 pt-12">
+            <DialogClose asChild>
+              <Button
+                variant="ghost"
+                className="absolute right-5 top-5 p-0 group z-10"
+              >
+                <Icon
+                  id="#close"
+                  className="h-8 w-8 stroke-text-inverse fill-none group-hover:scale-110 transition-transform duration-200"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">Close</span>
+              </Button>
+            </DialogClose>
+
+            <DialogTitle
+              className={cn(
+                hideTitle && 'sr-only',
+                !hideTitle &&
+                  'font-primary text-[40px] font-semibold leading-[48px] tracking-[-0.8px] text-text-inverse'
+              )}
             >
-              <Icon
-                id="#close"
-                className="h-8 w-8 stroke-text-inverse fill-none group-hover:scale-110 transition-scale duration-200"
-                aria-hidden="true"
-              />
-              <span className="sr-only">Close</span>
-            </Button>
-          </DialogClose>
-          <DialogTitle className="sr-only">{title}</DialogTitle>
-          {description && (
-            <DialogDescription className="sr-only">
-              {description}
-            </DialogDescription>
+              {title}
+            </DialogTitle>
+
+            {description && (
+              <DialogDescription
+                className={cn(
+                  hideDescription && 'sr-only',
+                  !hideDescription &&
+                    'mt-5 font-primary text-xl font-normal leading-[30px] text-text-inverse/80'
+                )}
+              >
+                {description}
+              </DialogDescription>
+            )}
+          </DialogHeader>
+        </div>
+
+        <div
+          className={cn(
+            'px-16',
+            'pb-12',
+            'w-full flex-1 overflow-y-auto scrollbar-thin',
+            'scrollbar-track-transparent scrollbar-thumb-border-inputAccentLight/50',
+            'hover:scrollbar-thumb-border-inputAccentLight transition-colors',
+            contentClassName
           )}
-        </DialogHeader>
-        <div className={cn('w-full', contentClassName)}>{children}</div>
+        >
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );

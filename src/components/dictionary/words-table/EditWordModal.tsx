@@ -22,9 +22,10 @@ export function EditWordModal({
       open={isOpen}
       onOpenChange={onClose}
       title="Edit Word"
-      description="Edit word translation"
+      description="Update word translation"
       className="w-[628px]"
-      contentClassName="rounded-[30px] shadow-lg bg-brand-primary p-16 relative"
+      hideTitle={true}
+      hideDescription={true}
     >
       <EditWordForm
         word={word}
