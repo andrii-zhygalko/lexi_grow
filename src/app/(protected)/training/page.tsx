@@ -36,6 +36,7 @@ export default function TrainingPage() {
   const results = useAppSelector(selectTrainingResults);
   const isLoading = useAppSelector(selectTrainingIsLoading);
   const [showResults, setShowResults] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -69,13 +70,16 @@ export default function TrainingPage() {
             : { ua: lastAnswer.trim(), en: currentTask.en! }),
         }
       : undefined;
-
-    const result = await dispatch(
-      submitAllAnswers({ answers, lastAnswer: lastAnswerData })
-    );
-    if (submitAllAnswers.fulfilled.match(result)) {
-      setShowResults(true);
-    }
+    setIsSubmitting(true);
+    dispatch(submitAllAnswers({ answers, lastAnswer: lastAnswerData }))
+      .then((result) => {
+        if (submitAllAnswers.fulfilled.match(result)) {
+          setShowResults(true);
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   if (isLoading) {
@@ -114,6 +118,7 @@ export default function TrainingPage() {
         isLastTask={currentTaskIndex === tasks.length - 1}
         onNext={handleNext}
         onSave={handleSave}
+        isSubmitting={isSubmitting}
         onCancel={() => router.back()}
       />
 

@@ -14,28 +14,32 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { FormField } from '../form-fields/FormField';
 import { Input } from '../form-fields/Input';
-import { ApiError, handleApiError } from '@/lib/utils';
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: yupResolver(registerSchema),
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
-    try {
-      await dispatch(signup(data)).unwrap();
-      router.push('/dictionary');
-    } catch (error) {
-      handleApiError(error as ApiError);
-    }
+  const onSubmit = (data: RegisterFormData) => {
+    setIsSubmitting(true);
+    dispatch(signup(data))
+      .then((result) => {
+        if (signup.fulfilled.match(result)) {
+          router.push('/dictionary');
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -110,17 +114,13 @@ export function RegisterForm() {
         <Button
           type="submit"
           size="login"
-          className="md:text-lg md:leading-7"
+          className="relative md:text-lg md:leading-7"
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Registering...
-            </>
-          ) : (
-            'Register'
+          {isSubmitting && (
+            <Loader2 className="absolute left-20 sm:left-[110px] md:left-[190px] mb-1 h-5 w-5 animate-spin shrink-0" />
           )}
+          Register
         </Button>
       </form>
 

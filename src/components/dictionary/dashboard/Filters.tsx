@@ -19,7 +19,6 @@ import {
 } from '@/redux/features/recommend/operations';
 import { useDebounce } from '@/lib/hooks/useDebounce';
 import { WordCategory } from '@/lib/types/dictionary';
-import { handleApiError, ApiError } from '@/lib/utils/error';
 import { cn } from '@/lib/utils';
 import {
   selectCategories as selectDictionaryCategories,
@@ -65,36 +64,29 @@ export function Filters({ variant }: FiltersProps) {
   }, [dispatch, variant]);
 
   useEffect(() => {
-    try {
-      const value = debouncedSearch.trim();
+    const value = debouncedSearch.trim();
 
-      if (value.length > MAX_SEARCH_LENGTH) {
-        setSearchError(`Keyword cannot exceed ${MAX_SEARCH_LENGTH} characters`);
-        return;
-      }
-
-      if (value && !/^(?!.*--)(?!^-)(?!.*-$)[\p{L}\p{M}\s\-]+$/u.test(value)) {
-        setSearchError('Please enter a valid word or phrase');
-        return;
-      }
-
-      setSearchError('');
-      const sanitizedValue = value.replace(/\s+/g, ' ');
-
-      const setFilter =
-        variant === 'dictionary' ? setDictionaryFilter : setRecommendFilter;
-      const fetchWords =
-        variant === 'dictionary' ? fetchDictionaryWords : fetchRecommendWords;
-
-      dispatch(setFilter({ key: 'keyword', value: sanitizedValue }));
-      dispatch(fetchWords())
-        .unwrap()
-        .catch((error) => {
-          handleApiError(error as ApiError);
-        });
-    } catch (error) {
-      handleApiError(error as ApiError);
+    if (value.length > MAX_SEARCH_LENGTH) {
+      setSearchError(`Keyword cannot exceed ${MAX_SEARCH_LENGTH} characters`);
+      return;
     }
+
+    if (value && !/^(?!.*--)(?!^-)(?!.*-$)[\p{L}\p{M}\s\-]+$/u.test(value)) {
+      setSearchError('Please enter a valid word or phrase');
+      return;
+    }
+
+    setSearchError('');
+    const sanitizedValue = value.replace(/\s+/g, ' ');
+
+    const setFilter =
+      variant === 'dictionary' ? setDictionaryFilter : setRecommendFilter;
+    const fetchWords =
+      variant === 'dictionary' ? fetchDictionaryWords : fetchRecommendWords;
+
+    dispatch(setFilter({ key: 'keyword', value: sanitizedValue }));
+
+    dispatch(fetchWords());
   }, [debouncedSearch, dispatch, variant]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,11 +110,13 @@ export function Filters({ variant }: FiltersProps) {
         value: value === 'all' ? null : value,
       })
     );
+
     if (value !== 'verb') {
       dispatch(setFilter({ key: 'isIrregular', value: null }));
     } else {
       dispatch(setFilter({ key: 'isIrregular', value: false }));
     }
+
     dispatch(fetchWords());
   };
 

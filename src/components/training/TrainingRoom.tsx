@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import Icon from '@/components/common/Icon';
 import type { TrainingTask } from '@/lib/types/training';
 import { UI_CONFIG, VALIDATION_PATTERNS } from '@/lib/constants/training';
+import { Loader2 } from 'lucide-react';
 
 interface TrainingRoomProps {
   task: TrainingTask;
@@ -12,6 +13,7 @@ interface TrainingRoomProps {
   onSave: (lastAnswer?: string) => void;
   onCancel: () => void;
   error?: string | null;
+  isSubmitting: boolean;
 }
 
 export function TrainingRoom({
@@ -20,6 +22,7 @@ export function TrainingRoom({
   onNext,
   onSave,
   onCancel,
+  isSubmitting,
 }: TrainingRoomProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState('');
@@ -144,8 +147,13 @@ export function TrainingRoom({
       <div className="mt-20 flex gap-2.5">
         <Button
           onClick={handleSaveClick}
-          className="h-14 w-[200px] rounded-[30px] bg-brand-primary font-primary text-lg font-bold leading-7 text-text-inverse transition-colors duration-200 hover:bg-brand-primaryHover"
+          className="relative h-14 w-[200px] rounded-[30px] bg-brand-primary font-primary text-lg font-bold leading-7 text-text-inverse transition-colors duration-200 hover:bg-brand-primaryHover"
+          disabled={isSubmitting}
         >
+          {' '}
+          {isSubmitting && (
+            <Loader2 className="absolute left-14 mb-1 h-5 w-5 animate-spin shrink-0" />
+          )}
           Save
         </Button>
         <Button

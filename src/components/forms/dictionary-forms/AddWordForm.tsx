@@ -18,7 +18,7 @@ import { addWordSchema } from '@/lib/schemas/dictionary/add-word';
 
 interface AddWordFormProps {
   categories: WordCategory[];
-  onSubmit: (data: AddWordFormData) => Promise<void>;
+  onSubmit: (data: AddWordFormData) => void;
   onCancel: () => void;
   isSubmitting: boolean;
 }

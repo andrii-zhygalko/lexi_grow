@@ -12,31 +12,34 @@ import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { FormField } from '../form-fields/FormField';
 import { Input } from '../form-fields/Input';
-import { ApiError } from '@/lib/utils';
-import { handleApiError } from '@/lib/utils/error';
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      await dispatch(signin(data)).unwrap();
-      const redirectTo = searchParams?.get('redirect') || '/dictionary';
-      router.push(redirectTo);
-    } catch (error) {
-      handleApiError(error as ApiError);
-    }
+  const onSubmit = (data: LoginFormData) => {
+    setIsSubmitting(true);
+    dispatch(signin(data))
+      .then((result) => {
+        if (signin.fulfilled.match(result)) {
+          const redirectTo = searchParams?.get('redirect') || '/dictionary';
+          router.push(redirectTo);
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -99,17 +102,13 @@ export function LoginForm() {
         <Button
           type="submit"
           size="login"
-          className="md:text-lg md:leading-7"
+          className="relative md:text-lg md:leading-7"
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Logging in...
-            </>
-          ) : (
-            'Login'
+          {isSubmitting && (
+            <Loader2 className="absolute left-24 sm:left-[200px]  mb-1 h-5 w-5 animate-spin shrink-0" />
           )}
+          Log in
         </Button>
       </form>
 

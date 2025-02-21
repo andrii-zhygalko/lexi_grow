@@ -10,7 +10,7 @@ import { editWordSchema } from '@/lib/schemas/dictionary/edit-word';
 
 interface EditWordFormProps {
   word: WordResponse;
-  onSubmit: (data: EditWordFormData) => Promise<void>;
+  onSubmit: (data: EditWordFormData) => void;
   onCancel: () => void;
   isSubmitting: boolean;
 }

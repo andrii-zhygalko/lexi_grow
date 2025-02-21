@@ -52,7 +52,6 @@ const trainingSlice = createSlice({
         state.error = action.error.message || 'Failed to fetch tasks';
       })
       .addCase(submitAllAnswers.pending, (state) => {
-        state.isLoading = true;
         state.error = null;
       })
       .addCase(

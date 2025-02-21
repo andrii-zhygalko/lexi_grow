@@ -6,7 +6,7 @@ interface AddWordModalProps {
   categories: WordCategory[];
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: AddWordFormData) => Promise<void>;
+  onSubmit: (data: AddWordFormData) => void;
   isSubmitting: boolean;
 }
 

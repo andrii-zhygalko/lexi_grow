@@ -24,7 +24,6 @@ import {
   editWord,
 } from '@/redux/features/dictionary/operations';
 import { showSuccess } from '@/lib/utils';
-import { handleApiError, ApiError } from '@/lib/utils/error';
 import { EditWordModal } from './EditWordModal';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
@@ -35,7 +34,7 @@ type WordsTableProps = {
   | { variant: 'dictionary' }
   | {
       variant: 'recommend';
-      onWordAdd: (wordId: string) => Promise<void>;
+      onWordAdd: (wordId: string) => void;
       addingWordIds?: string[];
     }
 );
@@ -68,44 +67,48 @@ export function WordsTable(props: WordsTableProps) {
   const [editingWord, setEditingWord] = useState<WordResponse | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDeleteWord = async (wordId: string) => {
-    try {
-      setDeletingWordIds((prev) => [...prev, wordId]);
-      await dispatch(deleteWord(wordId)).unwrap();
-      showSuccess('Word deleted successfully');
-      dispatch(fetchWords());
-      dispatch(fetchStatistics());
-    } catch (error) {
-      handleApiError(error as ApiError);
-    } finally {
-      setDeletingWordIds((prev) => prev.filter((id) => id !== wordId));
-    }
+  const handleDeleteWord = (wordId: string) => {
+    setDeletingWordIds((prev) => [...prev, wordId]);
+
+    dispatch(deleteWord(wordId))
+      .then((result) => {
+        if (deleteWord.fulfilled.match(result)) {
+          showSuccess('Word deleted successfully');
+          dispatch(fetchWords());
+          dispatch(fetchStatistics());
+        }
+      })
+      .finally(() => {
+        setDeletingWordIds((prev) => prev.filter((id) => id !== wordId));
+      });
   };
 
-  const handleEditWord = async (data: EditWordFormData) => {
+  const handleEditWord = (data: EditWordFormData) => {
     if (!editingWord) return;
 
-    try {
-      setIsSubmitting(true);
-      await dispatch(
-        editWord({
-          wordId: editingWord._id,
-          wordData: {
-            en: data.en,
-            ua: data.ua,
-            category: editingWord.category,
-            isIrregular: editingWord.isIrregular ?? undefined,
-          },
-        })
-      ).unwrap();
-      showSuccess('Word successfully updated');
-      setEditingWord(null);
-      dispatch(fetchWords());
-    } catch (error) {
-      handleApiError(error as ApiError);
-    } finally {
-      setIsSubmitting(false);
-    }
+    setIsSubmitting(true);
+
+    dispatch(
+      editWord({
+        wordId: editingWord._id,
+        wordData: {
+          en: data.en,
+          ua: data.ua,
+          category: editingWord.category,
+          isIrregular: editingWord.isIrregular ?? undefined,
+        },
+      })
+    )
+      .then((result) => {
+        if (editWord.fulfilled.match(result)) {
+          showSuccess('Word successfully updated');
+          setEditingWord(null);
+          dispatch(fetchWords());
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   const columns = [

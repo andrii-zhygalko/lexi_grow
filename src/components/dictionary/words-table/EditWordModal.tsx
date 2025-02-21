@@ -6,7 +6,7 @@ interface EditWordModalProps {
   word: WordResponse;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: EditWordFormData) => Promise<void>;
+  onSubmit: (data: EditWordFormData) => void;
   isSubmitting: boolean;
 }
 
