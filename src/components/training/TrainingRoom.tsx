@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Icon from '@/components/common/Icon';
-import type { TrainingTask } from '@/lib/types/training';
+import type { TrainingAnswer, TrainingTask } from '@/lib/types/training';
 import { UI_CONFIG, VALIDATION_PATTERNS } from '@/lib/constants/training';
 import { Loader2 } from 'lucide-react';
 
@@ -14,10 +14,12 @@ interface TrainingRoomProps {
   onCancel: () => void;
   error?: string | null;
   isSubmitting: boolean;
+  answers: TrainingAnswer[];
 }
 
 export function TrainingRoom({
   task,
+  answers,
   isLastTask,
   onNext,
   onSave,
@@ -39,6 +41,14 @@ export function TrainingRoom({
     return true;
   };
 
+  const canSave = () => {
+    const trimmedValue = value.trim();
+    if (!trimmedValue) return false;
+
+    const pattern = VALIDATION_PATTERNS[task.task];
+    return pattern.test(trimmedValue);
+  };
+
   const handleNext = () => {
     if (validateInput(value.trim())) {
       onNext(value.trim());
@@ -55,7 +65,7 @@ export function TrainingRoom({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       if (isLastTask) {
-        if (validateInput(value.trim())) {
+        if (validateInput(value.trim()) && canSave()) {
           onSave(value.trim());
         }
       } else {
@@ -147,10 +157,9 @@ export function TrainingRoom({
       <div className="mt-20 flex gap-2.5">
         <Button
           onClick={handleSaveClick}
-          className="relative h-14 w-[200px] rounded-[30px] bg-brand-primary font-primary text-lg font-bold leading-7 text-text-inverse transition-colors duration-200 hover:bg-brand-primaryHover"
-          disabled={isSubmitting}
+          className="relative h-14 w-[200px] rounded-[30px] bg-brand-primary font-primary text-lg font-bold leading-7 text-text-inverse transition-colors duration-200 hover:bg-brand-primaryHover disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isSubmitting || (!canSave() && answers.length === 0)}
         >
-          {' '}
           {isSubmitting && (
             <Loader2 className="absolute left-14 mb-1 h-5 w-5 animate-spin shrink-0" />
           )}
@@ -160,6 +169,7 @@ export function TrainingRoom({
           variant="outline"
           onClick={onCancel}
           className="h-14 w-[200px] rounded-[30px] border-brand-primary font-primary text-lg font-bold leading-7 text-brand-primary"
+          disabled={isSubmitting}
         >
           Cancel
         </Button>

@@ -120,6 +120,7 @@ export default function TrainingPage() {
         onSave={handleSave}
         isSubmitting={isSubmitting}
         onCancel={() => router.back()}
+        answers={answers}
       />
 
       <WellDoneModal
