@@ -7,7 +7,11 @@ import {
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { ProgressCircle } from '@/components/ui/progress-circle';
-import { EditWordFormData, WordResponse } from '@/lib/types/dictionary';
+import {
+  EditWordFormData,
+  WordResponse,
+  WordCategory,
+} from '@/lib/types/dictionary';
 import {
   Popover,
   PopoverContent,
@@ -15,7 +19,7 @@ import {
 } from '@/components/ui/popover';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useState } from 'react';
 import {
   deleteWord,
@@ -25,6 +29,7 @@ import {
 import { showSuccess } from '@/lib/utils';
 import { EditWordModal } from './EditWordModal';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
+import { selectCategories } from '@/redux/features/dictionary/selectors';
 
 type WordsTableProps = {
   words: WordResponse[];
@@ -65,6 +70,7 @@ export function WordsTable(props: WordsTableProps) {
   const [deletingWordIds, setDeletingWordIds] = useState<string[]>([]);
   const [editingWord, setEditingWord] = useState<WordResponse | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const categories = useAppSelector(selectCategories);
 
   const handleDeleteWord = (wordId: string) => {
     setDeletingWordIds((prev) => [...prev, wordId]);
@@ -91,8 +97,8 @@ export function WordsTable(props: WordsTableProps) {
         wordData: {
           en: data.en,
           ua: data.ua,
-          category: editingWord.category,
-          isIrregular: editingWord.isIrregular ?? undefined,
+          category: data.category as WordCategory,
+          isIrregular: data.isIrregular,
         },
       })
     )
@@ -125,7 +131,6 @@ export function WordsTable(props: WordsTableProps) {
           {info.getValue()}
         </div>
       ),
-      size: 25,
     }),
     columnHelper.accessor('ua', {
       header: () => (
@@ -139,7 +144,6 @@ export function WordsTable(props: WordsTableProps) {
           {info.getValue()}
         </div>
       ),
-      size: 25,
     }),
     columnHelper.accessor('category', {
       header: 'Category',
@@ -148,7 +152,6 @@ export function WordsTable(props: WordsTableProps) {
           {info.getValue()}
         </div>
       ),
-      size: 20,
     }),
     ...(variant === 'dictionary'
       ? [
@@ -167,7 +170,6 @@ export function WordsTable(props: WordsTableProps) {
                 </div>
               );
             },
-            size: 15,
           }),
         ]
       : []),
@@ -253,7 +255,6 @@ export function WordsTable(props: WordsTableProps) {
           </Button>
         );
       },
-      size: 15,
     }),
   ];
 
@@ -287,7 +288,9 @@ export function WordsTable(props: WordsTableProps) {
                     tableBorderStyles,
                     'bg-table-row text-left font-primary text-xl font-medium',
                     columnWidths[variant][
-                      header.id as keyof (typeof columnWidths)[typeof variant]
+                      header.id.split(
+                        '_'
+                      )[0] as keyof (typeof columnWidths)[typeof variant]
                     ],
                     index === 0 && 'rounded-tl-lg',
                     index === headerGroup.headers.length - 1 && 'rounded-tr-lg',
@@ -358,7 +361,11 @@ export function WordsTable(props: WordsTableProps) {
                     baseCellStyles,
                     tableBorderStyles,
                     'bg-table-row text-left font-primary text-xl font-medium',
-                    columnWidths[header.id as keyof typeof columnWidths],
+                    columnWidths[variant][
+                      header.id.split(
+                        '_'
+                      )[0] as keyof (typeof columnWidths)[typeof variant]
+                    ],
                     index === 0 && 'rounded-tl-lg',
                     index === headerGroup.headers.length - 1 && 'rounded-tr-lg',
                     index !== 0 && 'border-l border-table-border'
@@ -408,6 +415,7 @@ export function WordsTable(props: WordsTableProps) {
       {editingWord && (
         <EditWordModal
           word={editingWord}
+          categories={categories}
           isOpen={!!editingWord}
           onClose={() => setEditingWord(null)}
           onSubmit={handleEditWord}

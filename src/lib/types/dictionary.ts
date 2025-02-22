@@ -17,7 +17,7 @@ export interface WordsResponse {
 export interface EditWordFormData {
   en: string;
   ua: string;
-  category?: WordCategory;
+  category: WordCategory | null;
   isIrregular?: boolean | undefined;
 }
 
