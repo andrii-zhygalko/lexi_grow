@@ -24,7 +24,7 @@ import { ProgressCircle } from '@/components/ui/progress-circle';
 import { EmptyTraining } from '@/components/training/EmptyTraining';
 import { TrainingRoom } from '@/components/training/TrainingRoom';
 import { WellDoneModal } from '@/components/training/WellDoneModal';
-import { LoadingScreen } from '@/components/common/LoadingScreen';
+import { TrainingRoomSkeleton } from '@/components/training/TrainingRoomSkeleton';
 
 export default function TrainingPage() {
   const router = useRouter();
@@ -83,7 +83,11 @@ export default function TrainingPage() {
   };
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return (
+      <div className="min-h-screen bg-background-page px-[100px] pt-16 pb-24">
+        <TrainingRoomSkeleton />
+      </div>
+    );
   }
 
   if (!tasks.length) {

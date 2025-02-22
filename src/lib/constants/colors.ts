@@ -18,6 +18,7 @@ const palette = {
     pure: '#FFFFFF',
     off: '#FCFCFC',
     gray: '#F8F8F8',
+    platinum: '#F2F2F2',
     alpha30: 'rgba(252, 252, 252, 0.30)',
   },
   red: {
@@ -52,6 +53,7 @@ export const colors = {
     overlay: palette.black.alpha50,
     overlayLight: palette.black.alpha20,
     hover: palette.green.alpha10,
+    skeleton: palette.white.platinum,
   },
   border: {
     default: palette.black.alpha10,
