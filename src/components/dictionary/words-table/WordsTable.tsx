@@ -20,7 +20,6 @@ import { useState } from 'react';
 import {
   deleteWord,
   fetchWords,
-  fetchStatistics,
   editWord,
 } from '@/redux/features/dictionary/operations';
 import { showSuccess } from '@/lib/utils';
@@ -74,8 +73,6 @@ export function WordsTable(props: WordsTableProps) {
       .then((result) => {
         if (deleteWord.fulfilled.match(result)) {
           showSuccess('Word deleted successfully');
-          dispatch(fetchWords());
-          dispatch(fetchStatistics());
         }
       })
       .finally(() => {

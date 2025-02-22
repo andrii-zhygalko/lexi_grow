@@ -42,37 +42,47 @@ export function WordsPagination({ className, variant }: WordsPaginationProps) {
   };
 
   const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
     if (totalPages <= 7) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
+    const pages: (number | string)[] = [];
+
     pages.push(1);
 
-    if (page > 3) {
+    let startPage: number;
+    let endPage: number;
+
+    if (page <= 3) {
+      startPage = 2;
+      endPage = 5;
+      pages.push(...range(startPage, endPage));
+      pages.push('...');
+    } else if (page >= totalPages - 2) {
+      pages.push('...');
+      startPage = totalPages - 4;
+      endPage = totalPages - 1;
+      pages.push(...range(startPage, endPage));
+    } else {
+      pages.push('...');
+      startPage = page - 1;
+      endPage = page + 1;
+      pages.push(...range(startPage, endPage));
       pages.push('...');
     }
 
-    for (
-      let i = Math.max(2, page - 1);
-      i <= Math.min(totalPages - 1, page + 1);
-      i++
-    ) {
-      pages.push(i);
-    }
-
-    if (page < totalPages - 2) {
-      pages.push('...');
-    }
-
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
+    pages.push(totalPages);
 
     return pages;
   };
 
-  if (totalPages <= 1) return null;
+  const range = (start: number, end: number) => {
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+
+  if (!hasWords || totalPages <= 1) {
+    return null;
+  }
 
   return (
     <div className={cn('flex justify-center gap-2.5', className)}>

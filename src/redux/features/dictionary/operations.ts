@@ -6,7 +6,11 @@ import {
   WordCategory,
 } from '@/lib/types/dictionary';
 import { ApiError, handleApiError, serializeError } from '@/lib/utils/error';
-import { incrementTotalCount, decrementTotalCount } from './dictionarySlice';
+import {
+  incrementTotalCount,
+  decrementTotalCount,
+  setFilter,
+} from './dictionarySlice';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
 
 export const fetchCategories = createAsyncThunk(
@@ -74,10 +78,22 @@ export const addWordToDictionary = createAsyncThunk(
 
 export const deleteWord = createAsyncThunk(
   'dictionary/deleteWord',
-  async (wordId: string, { dispatch, rejectWithValue }) => {
+  async (wordId: string, { dispatch, getState, rejectWithValue }) => {
     try {
+      const state = getState() as { dictionary: DictionaryState };
+      const { page, results } = state.dictionary.words;
+
       const response = await dictionaryApi.deleteWord(wordId);
+
       dispatch(decrementTotalCount());
+
+      if (results.length === 1 && page > 1) {
+        dispatch(setFilter({ key: 'page', value: page - 1 }));
+      }
+
+      dispatch(fetchWords());
+      dispatch(fetchStatistics());
+
       return response;
     } catch (error) {
       const apiError = error as ApiError;
