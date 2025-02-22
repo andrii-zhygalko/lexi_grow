@@ -45,7 +45,7 @@ type WordsTableProps = {
 
 const columnHelper = createColumnHelper<WordResponse>();
 
-const baseCellStyles = 'p-[22px] font-primary text-xl';
+const baseCellStyles = 'px-[22px] py-[16px] font-primary text-xl';
 const tableBorderStyles = 'border-b border-table-border';
 
 const columnWidths = {
@@ -265,7 +265,7 @@ export function WordsTable(props: WordsTableProps) {
   });
 
   const TableWrapper = ({ children }: { children: React.ReactNode }) => (
-    <div className="rounded-[15px] bg-background-white p-[18px] min-h-[705px]">
+    <div className="rounded-[15px] bg-background-white p-[18px] min-h-[612px]">
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-[800px] border-separate border-spacing-0">
           {children}
@@ -308,14 +308,14 @@ export function WordsTable(props: WordsTableProps) {
         </thead>
         <tbody>
           {Array.from({ length: WORDS_PER_PAGE }).map((_, rowIndex) => (
-            <tr key={rowIndex} className="h-[84px]">
+            <tr key={rowIndex} className="">
               {Array.from({ length: columns.length }).map((_, colIndex) => (
                 <td
                   key={colIndex}
                   className={cn(
                     baseCellStyles,
                     tableBorderStyles,
-                    'bg-table-cell',
+                    'bg-table-cell py-[24px]',
                     columnWidths[variant][
                       Object.keys(columnWidths[variant])[
                         colIndex
@@ -328,7 +328,7 @@ export function WordsTable(props: WordsTableProps) {
                       'rounded-br-lg'
                   )}
                 >
-                  <div className="h-6 bg-gray-100 rounded animate-pulse" />
+                  <div className="h-6 bg-background-skeleton rounded-2xl animate-pulse" />
                 </td>
               ))}
             </tr>
@@ -382,7 +382,7 @@ export function WordsTable(props: WordsTableProps) {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="h-[74px]">
+            <tr key={row.id} className="">
               {row.getVisibleCells().map((cell, index) => (
                 <td
                   key={cell.id}
