@@ -71,7 +71,7 @@ export function AddWordForm({
         >
           <SelectTrigger
             variant="modal"
-            className="max-w-[210px] rounded-[15px]"
+            className="max-w-[210px] rounded-[15px] shadow-none"
             aria-label="Select word category"
           >
             <SelectValue placeholder="Select category" />
@@ -81,7 +81,7 @@ export function AddWordForm({
               <SelectItem
                 key={category}
                 value={category}
-                className="mb-1 font-primary text-base font-medium text-text-secondary hover:text-brand-primary"
+                className="mb-1 last:mb-0 py-0 font-primary text-base font-medium text-text-secondary focus:bg-transparent focus:text-brand-primary"
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </SelectItem>
@@ -146,6 +146,7 @@ export function AddWordForm({
             <Input
               variant="light"
               placeholder="Enter word"
+              className="placeholder:pl-1 placeholder:translate-y-0.5"
               error={!!errors.ua}
               {...register('ua')}
             />
@@ -164,6 +165,7 @@ export function AddWordForm({
             <Input
               variant="light"
               placeholder="Enter translation"
+              className="placeholder:pl-1 placeholder:translate-y-0.5"
               error={!!errors.en}
               {...register('en')}
             />

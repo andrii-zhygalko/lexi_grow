@@ -24,17 +24,19 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex w-full items-center justify-between whitespace-nowrap rounded-md shadow-sm ring-offset-background placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 transition-all duration-200 ease-in-out',
+      'flex w-full items-center justify-between whitespace-nowrap rounded-md shadow-sm ring-offset-background placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 transition-all duration-200 ease-in-out outline-none',
       variant === 'default' && [
         'h-9 border border-input bg-transparent px-3 py-2 text-sm',
         'hover:border-border-hover',
-        'focus:outline-none focus:ring-1 focus:ring-ring focus:border-border-hover',
+        'focus:outline-none focus:ring-1 focus-visible:ring-border-hover focus:ring-border-hover',
+        'data-[state=open]:ring-1 data-[state=open]:ring-border-hover data-[state=open]:border-border-hover',
       ],
       variant === 'modal' && [
         'h-12 border border-border-inputLight bg-transparent px-6 py-3 text-base',
         'text-text-inverse placeholder:text-text-inverse',
         'hover:border-border-inverse',
         'focus:border-border-inverse focus:outline-none focus:ring-1 focus:ring-border-inputAccentLight',
+        'data-[state=open]:ring-1 data-[state=open]:ring-border-inputAccentLight data-[state=open]:border-border-inverse',
       ],
       className
     )}

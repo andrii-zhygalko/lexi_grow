@@ -88,7 +88,7 @@ export default function TrainingPage() {
 
   if (!tasks.length) {
     return (
-      <div className="flex min-h-screen items-center bg-background-page px-[100px]">
+      <div className="flex min-h-[80vh] items-center bg-background-page px-[100px]">
         <EmptyTraining />
       </div>
     );

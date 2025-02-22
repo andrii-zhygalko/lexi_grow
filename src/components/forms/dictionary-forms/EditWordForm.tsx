@@ -41,6 +41,7 @@ export function EditWordForm({
             <Input
               variant="light"
               placeholder="Enter word"
+              className="placeholder:pl-1 placeholder:translate-y-0.5"
               error={!!errors.ua}
               {...register('ua')}
             />
@@ -59,6 +60,7 @@ export function EditWordForm({
             <Input
               variant="light"
               placeholder="Enter translation"
+              className="placeholder:pl-1 placeholder:translate-y-0.5"
               error={!!errors.en}
               {...register('en')}
             />

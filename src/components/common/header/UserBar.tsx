@@ -21,7 +21,7 @@ export function UserBar() {
         {user?.name}
       </span>
 
-      <div className="ml-2.5 flex h-12 w-12 items-center justify-center rounded-[30px] bg-brand-primary">
+      <div className="mb-1 ml-2.5 flex h-12 w-12 items-center justify-center rounded-[30px] bg-brand-primary">
         <Icon
           id="#user"
           className="h-6 w-6 fill-text-inverse/70"

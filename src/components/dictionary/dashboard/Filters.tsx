@@ -171,7 +171,7 @@ export function Filters({ variant }: FiltersProps) {
           onValueChange={handleCategoryChange}
         >
           <SelectTrigger
-            className="h-12 min-w-[200px] rounded-[15px] border-border-default px-6 py-3 font-primary text-base font-medium"
+            className="h-12 min-w-[200px] rounded-[15px] border-border-default px-6 py-3 font-primary text-base font-medium shadow-none"
             aria-label="Select word category"
           >
             <SelectValue placeholder="Categories" />
