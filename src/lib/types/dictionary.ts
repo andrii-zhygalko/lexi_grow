@@ -8,6 +8,8 @@ export interface WordResponse {
   progress: number;
 }
 
+export type WordCategory = string;
+
 export interface WordsResponse {
   results: WordResponse[];
   totalPages: number;
@@ -35,19 +37,6 @@ export interface GetWordsParams {
   page?: number;
   limit?: number;
 }
-
-export type WordCategory =
-  | 'verb'
-  | 'participle'
-  | 'noun'
-  | 'adjective'
-  | 'pronoun'
-  | 'numerals'
-  | 'adverb'
-  | 'preposition'
-  | 'conjunction'
-  | 'phrasal verb'
-  | 'functional phrase';
 
 export interface DictionaryState {
   categories: WordCategory[];
