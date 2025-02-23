@@ -7,10 +7,10 @@ import {
 } from '@/lib/types/dictionary';
 
 interface EditWordModalProps {
-  word: WordResponse;
+  word: WordResponse | null;
   categories: WordCategory[];
   isOpen: boolean;
-  onClose: () => void;
+  onOpenChange: () => void;
   onSubmit: (data: EditWordFormData) => void;
   isSubmitting: boolean;
 }
@@ -19,14 +19,14 @@ export function EditWordModal({
   word,
   categories,
   isOpen,
-  onClose,
+  onOpenChange,
   onSubmit,
   isSubmitting,
 }: EditWordModalProps) {
   return (
     <Modal
       open={isOpen}
-      onOpenChange={onClose}
+      onOpenChange={onOpenChange}
       title="Edit Word"
       description="Update word details"
       className="w-[628px]"
@@ -36,7 +36,7 @@ export function EditWordModal({
         word={word}
         categories={categories}
         onSubmit={onSubmit}
-        onCancel={onClose}
+        onCancel={onOpenChange}
         isSubmitting={isSubmitting}
       />
     </Modal>

@@ -7,11 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { ProgressCircle } from '@/components/ui/progress-circle';
-import {
-  EditWordFormData,
-  WordResponse,
-  WordCategory,
-} from '@/lib/types/dictionary';
+import { WordResponse } from '@/lib/types/dictionary';
 import {
   Popover,
   PopoverContent,
@@ -19,23 +15,20 @@ import {
 } from '@/components/ui/popover';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useAppDispatch } from '@/redux/hooks';
 import { useState } from 'react';
-import {
-  deleteWord,
-  fetchWords,
-  editWord,
-} from '@/redux/features/dictionary/operations';
+import { deleteWord } from '@/redux/features/dictionary/operations';
 import { showSuccess } from '@/lib/utils';
-import { EditWordModal } from './EditWordModal';
 import { WORDS_PER_PAGE } from '@/lib/constants/dashboard';
-import { selectCategories } from '@/redux/features/dictionary/selectors';
 
 type WordsTableProps = {
   words: WordResponse[];
   isLoading: boolean;
 } & (
-  | { variant: 'dictionary' }
+  | {
+      variant: 'dictionary';
+      onEditWord: (word: WordResponse) => void;
+    }
   | {
       variant: 'recommend';
       onWordAdd: (wordId: string) => void;
@@ -68,9 +61,6 @@ export function WordsTable(props: WordsTableProps) {
   const { variant, words, isLoading } = props;
   const dispatch = useAppDispatch();
   const [deletingWordIds, setDeletingWordIds] = useState<string[]>([]);
-  const [editingWord, setEditingWord] = useState<WordResponse | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const categories = useAppSelector(selectCategories);
 
   const handleDeleteWord = (wordId: string) => {
     setDeletingWordIds((prev) => [...prev, wordId]);
@@ -83,34 +73,6 @@ export function WordsTable(props: WordsTableProps) {
       })
       .finally(() => {
         setDeletingWordIds((prev) => prev.filter((id) => id !== wordId));
-      });
-  };
-
-  const handleEditWord = (data: EditWordFormData) => {
-    if (!editingWord) return;
-
-    setIsSubmitting(true);
-
-    dispatch(
-      editWord({
-        wordId: editingWord._id,
-        wordData: {
-          en: data.en,
-          ua: data.ua,
-          category: data.category as WordCategory,
-          isIrregular: data.isIrregular,
-        },
-      })
-    )
-      .then((result) => {
-        if (editWord.fulfilled.match(result)) {
-          showSuccess('Word successfully updated');
-          setEditingWord(null);
-          dispatch(fetchWords());
-        }
-      })
-      .finally(() => {
-        setIsSubmitting(false);
       });
   };
 
@@ -199,7 +161,7 @@ export function WordsTable(props: WordsTableProps) {
                     <Button
                       variant="ghost"
                       className="flex justify-start items-center p-1 w-full"
-                      onClick={() => setEditingWord(row.original)}
+                      onClick={() => props.onEditWord(row.original)}
                     >
                       <Icon
                         id="#edit"
@@ -349,79 +311,66 @@ export function WordsTable(props: WordsTableProps) {
   }
 
   return (
-    <>
-      <TableWrapper>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header, index) => (
-                <th
-                  key={header.id}
-                  className={cn(
-                    baseCellStyles,
-                    tableBorderStyles,
-                    'bg-table-row text-left font-primary text-xl font-medium',
-                    columnWidths[variant][
-                      header.id.split(
-                        '_'
-                      )[0] as keyof (typeof columnWidths)[typeof variant]
-                    ],
-                    index === 0 && 'rounded-tl-lg',
-                    index === headerGroup.headers.length - 1 && 'rounded-tr-lg',
-                    index !== 0 && 'border-l border-table-border'
-                  )}
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="">
-              {row.getVisibleCells().map((cell, index) => (
-                <td
-                  key={cell.id}
-                  className={cn(
-                    baseCellStyles,
-                    tableBorderStyles,
-                    'bg-table-cell',
-                    columnWidths[variant][
-                      Object.keys(columnWidths[variant])[
-                        index
-                      ] as keyof (typeof columnWidths)[typeof variant]
-                    ],
-                    index !== 0 && 'border-l border-table-border',
-                    index === 0 &&
-                      row.index === table.getRowModel().rows.length - 1 &&
-                      'rounded-bl-lg',
-                    index === row.getVisibleCells().length - 1 &&
-                      row.index === table.getRowModel().rows.length - 1 &&
-                      'rounded-br-lg'
-                  )}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </TableWrapper>
-
-      {editingWord && (
-        <EditWordModal
-          word={editingWord}
-          categories={categories}
-          isOpen={!!editingWord}
-          onClose={() => setEditingWord(null)}
-          onSubmit={handleEditWord}
-          isSubmitting={isSubmitting}
-        />
-      )}
-    </>
+    <TableWrapper>
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header, index) => (
+              <th
+                key={header.id}
+                className={cn(
+                  baseCellStyles,
+                  tableBorderStyles,
+                  'bg-table-row text-left font-primary text-xl font-medium',
+                  columnWidths[variant][
+                    header.id.split(
+                      '_'
+                    )[0] as keyof (typeof columnWidths)[typeof variant]
+                  ],
+                  index === 0 && 'rounded-tl-lg',
+                  index === headerGroup.headers.length - 1 && 'rounded-tr-lg',
+                  index !== 0 && 'border-l border-table-border'
+                )}
+              >
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext()
+                )}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id} className="">
+            {row.getVisibleCells().map((cell, index) => (
+              <td
+                key={cell.id}
+                className={cn(
+                  baseCellStyles,
+                  tableBorderStyles,
+                  'bg-table-cell',
+                  columnWidths[variant][
+                    Object.keys(columnWidths[variant])[
+                      index
+                    ] as keyof (typeof columnWidths)[typeof variant]
+                  ],
+                  index !== 0 && 'border-l border-table-border',
+                  index === 0 &&
+                    row.index === table.getRowModel().rows.length - 1 &&
+                    'rounded-bl-lg',
+                  index === row.getVisibleCells().length - 1 &&
+                    row.index === table.getRowModel().rows.length - 1 &&
+                    'rounded-br-lg'
+                )}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </TableWrapper>
   );
 }

@@ -129,7 +129,7 @@ export default function TrainingPage() {
 
       <WellDoneModal
         isOpen={showResults}
-        onClose={() => setShowResults(false)}
+        onOpenChange={() => setShowResults(false)}
         results={results}
       />
     </div>

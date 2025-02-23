@@ -5,7 +5,7 @@ import { WordCategory, AddWordFormData } from '@/lib/types/dictionary';
 interface AddWordModalProps {
   categories: WordCategory[];
   isOpen: boolean;
-  onClose: () => void;
+  onOpenChange: () => void;
   onSubmit: (data: AddWordFormData) => void;
   isSubmitting: boolean;
 }
@@ -13,14 +13,14 @@ interface AddWordModalProps {
 export function AddWordModal({
   categories,
   isOpen,
-  onClose,
+  onOpenChange,
   onSubmit,
   isSubmitting,
 }: AddWordModalProps) {
   return (
     <Modal
       open={isOpen}
-      onOpenChange={onClose}
+      onOpenChange={onOpenChange}
       title="Add word"
       description="Adding a new word to the dictionary is an important step in enriching the language base and expanding the vocabulary."
       className="w-[628px]"
@@ -28,7 +28,7 @@ export function AddWordModal({
       <AddWordForm
         categories={categories}
         onSubmit={onSubmit}
-        onCancel={onClose}
+        onCancel={onOpenChange}
         isSubmitting={isSubmitting}
       />
     </Modal>

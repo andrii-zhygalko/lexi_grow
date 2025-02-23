@@ -14,6 +14,7 @@ import {
   fetchStatistics,
   addWordToDictionary,
   createWord,
+  editWord,
 } from '@/redux/features/dictionary/operations';
 import { fetchWords as fetchRecommendWords } from '@/redux/features/recommend/operations';
 import { selectWords } from '@/redux/features/dictionary/selectors';
@@ -25,7 +26,13 @@ import {
 import { selectRecommendStatus } from '@/redux/features/recommend/selectors';
 import { showSuccess } from '@/lib/utils/toast';
 import { AddWordModal } from '../words-table/AddWordModal';
-import { WordCategory, AddWordFormData } from '@/lib/types/dictionary';
+import { EditWordModal } from '../words-table/EditWordModal';
+import {
+  WordCategory,
+  AddWordFormData,
+  EditWordFormData,
+  WordResponse,
+} from '@/lib/types/dictionary';
 import { useSearchParams } from 'next/navigation';
 
 interface DashboardProps {
@@ -43,8 +50,17 @@ export function Dashboard({ variant }: DashboardProps) {
   const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(
     searchParams.get('openAddWord') === 'true'
   );
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAddSubmitting, setIsAddSubmitting] = useState(false);
   const categories = useAppSelector(selectDictionaryCategories);
+
+  const [editModalState, setEditModalState] = useState<{
+    isOpen: boolean;
+    word: WordResponse | null;
+  }>({
+    isOpen: false,
+    word: null,
+  });
+  const [isEditSubmitting, setIsEditSubmitting] = useState(false);
 
   useEffect(() => {
     if (variant === 'dictionary') {
@@ -82,7 +98,7 @@ export function Dashboard({ variant }: DashboardProps) {
   };
 
   const handleAddNewWord = (data: AddWordFormData) => {
-    setIsSubmitting(true);
+    setIsAddSubmitting(true);
 
     dispatch(
       createWord({
@@ -101,21 +117,62 @@ export function Dashboard({ variant }: DashboardProps) {
         }
       })
       .finally(() => {
-        setIsSubmitting(false);
+        setIsAddSubmitting(false);
       });
   };
 
-  const handleCloseModal = () => {
+  const handleEditWord = async (data: EditWordFormData) => {
+    if (!editModalState.word) return;
+
+    setIsEditSubmitting(true);
+
+    try {
+      const result = await dispatch(
+        editWord({
+          wordId: editModalState.word._id,
+          wordData: {
+            en: data.en,
+            ua: data.ua,
+            category: data.category as WordCategory,
+            isIrregular: data.isIrregular,
+          },
+        })
+      );
+
+      if (editWord.fulfilled.match(result)) {
+        showSuccess('Word successfully updated');
+        setEditModalState({ isOpen: false, word: null });
+        dispatch(fetchDictionaryWords());
+      }
+    } finally {
+      setIsEditSubmitting(false);
+    }
+  };
+
+  const handleCloseAddModal = () => {
     const url = new URL(window.location.href);
     url.searchParams.delete('openAddWord');
     window.history.replaceState({}, '', url);
     setIsAddWordModalOpen(false);
   };
 
+  const handleOpenEditModal = (word: WordResponse) => {
+    setEditModalState({ isOpen: true, word });
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalState({ isOpen: false, word: null });
+  };
+
   const renderWordsTable = () => {
     if (variant === 'dictionary') {
       return (
-        <WordsTable variant="dictionary" words={words} isLoading={isLoading} />
+        <WordsTable
+          variant="dictionary"
+          words={words}
+          isLoading={isLoading}
+          onEditWord={handleOpenEditModal}
+        />
       );
     }
     return (
@@ -175,13 +232,24 @@ export function Dashboard({ variant }: DashboardProps) {
       </div>
 
       {variant === 'dictionary' && (
-        <AddWordModal
-          categories={categories}
-          isOpen={isAddWordModalOpen}
-          onClose={handleCloseModal}
-          onSubmit={handleAddNewWord}
-          isSubmitting={isSubmitting}
-        />
+        <>
+          <AddWordModal
+            categories={categories}
+            isOpen={isAddWordModalOpen}
+            onOpenChange={handleCloseAddModal}
+            onSubmit={handleAddNewWord}
+            isSubmitting={isAddSubmitting}
+          />
+
+          <EditWordModal
+            word={editModalState.word}
+            categories={categories}
+            isOpen={editModalState.isOpen}
+            onOpenChange={handleCloseEditModal}
+            onSubmit={handleEditWord}
+            isSubmitting={isEditSubmitting}
+          />
+        </>
       )}
     </div>
   );

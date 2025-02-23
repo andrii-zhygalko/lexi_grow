@@ -21,7 +21,7 @@ import {
 import { editWordSchema } from '@/lib/schemas/dictionary/edit-word';
 
 interface EditWordFormProps {
-  word: WordResponse;
+  word: WordResponse | null;
   categories: WordCategory[];
   onSubmit: (data: EditWordFormData) => void;
   onCancel: () => void;
@@ -36,7 +36,7 @@ export function EditWordForm({
   isSubmitting,
 }: EditWordFormProps) {
   const [selectedRadio, setSelectedRadio] = useState<boolean | undefined>(
-    word.category === 'verb' ? word.isIrregular || false : undefined
+    word?.category === 'verb' ? word.isIrregular || false : undefined
   );
 
   const {
@@ -48,10 +48,10 @@ export function EditWordForm({
   } = useForm<EditWordFormData>({
     resolver: yupResolver(editWordSchema),
     defaultValues: {
-      en: word.en,
-      ua: word.ua,
-      category: word.category,
-      isIrregular: word.isIrregular,
+      en: word?.en,
+      ua: word?.ua,
+      category: word?.category,
+      isIrregular: word?.isIrregular,
     },
   });
 
@@ -62,9 +62,9 @@ export function EditWordForm({
     if (value !== 'verb') {
       setValue('isIrregular', undefined);
       setSelectedRadio(undefined);
-    } else if (value === 'verb' && word.category === 'verb') {
-      setValue('isIrregular', word.isIrregular || false);
-      setSelectedRadio(word.isIrregular || false);
+    } else if (value === 'verb' && word?.category === 'verb') {
+      setValue('isIrregular', word?.isIrregular || false);
+      setSelectedRadio(word?.isIrregular || false);
     } else {
       setValue('isIrregular', false);
       setSelectedRadio(false);

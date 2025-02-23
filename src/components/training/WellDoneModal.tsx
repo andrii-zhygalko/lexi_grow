@@ -5,13 +5,13 @@ import type { TrainingResult } from '@/lib/types/training';
 
 interface WellDoneModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onOpenChange: () => void;
   results: TrainingResult[];
 }
 
 export function WellDoneModal({
   isOpen,
-  onClose,
+  onOpenChange,
   results,
 }: WellDoneModalProps) {
   const router = useRouter();
@@ -19,7 +19,7 @@ export function WellDoneModal({
   const mistakes = results.filter((result) => !result.isDone);
 
   const handleClose = () => {
-    onClose();
+    onOpenChange();
     router.push('/dictionary');
   };
 
