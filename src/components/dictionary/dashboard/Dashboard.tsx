@@ -188,47 +188,50 @@ export function Dashboard({ variant }: DashboardProps) {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-10 md:gap-7 lg:flex-row lg:items-center lg:justify-between">
         <Filters variant={variant} />
 
-        <div className="flex items-center gap-4">
-          <Statistics />
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+          <div className="w-full md:w-auto">
+            <Statistics />
+          </div>
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            {variant === 'dictionary' && (
+              <Button
+                variant="ghost"
+                onClick={() => setIsAddWordModalOpen(true)}
+                className="p-1 font-primary text-base font-medium group"
+              >
+                Add word
+                <Icon
+                  id="#plus"
+                  className="mb-1 ml-2 h-5 w-5 stroke-brand-primary fill-none transition-transform duration-200 group-hover:scale-125"
+                  aria-hidden="true"
+                />
+              </Button>
+            )}
 
-          {variant === 'dictionary' && (
             <Button
               variant="ghost"
-              onClick={() => setIsAddWordModalOpen(true)}
+              asChild
               className="p-1 font-primary text-base font-medium group"
             >
-              Add word
-              <Icon
-                id="#plus"
-                className="mb-1 ml-2 h-5 w-5 stroke-brand-primary fill-none transition-transform duration-200 group-hover:scale-125"
-                aria-hidden="true"
-              />
+              <Link href="/training">
+                Train oneself
+                <Icon
+                  id="#arrow-right"
+                  className="mb-1 ml-2 h-5 w-5 stroke-brand-primary fill-none transition-transform duration-200 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
             </Button>
-          )}
-
-          <Button
-            variant="ghost"
-            asChild
-            className="p-1 font-primary text-base font-medium group"
-          >
-            <Link href="/training">
-              Train oneself
-              <Icon
-                id="#arrow-right"
-                className="mb-1 ml-2 h-5 w-5 stroke-brand-primary fill-none transition-transform duration-200 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-          </Button>
+          </div>
         </div>
       </div>
 
       <div className="mt-7">
         {renderWordsTable()}
-        <WordsPagination className="mt-7" variant={variant} />
+        <WordsPagination className="mt-8 md:mt-7" variant={variant} />
       </div>
 
       {variant === 'dictionary' && (

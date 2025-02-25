@@ -83,9 +83,9 @@ export function TrainingRoom({
 
   return (
     <>
-      <div className="rounded-[15px] bg-background-white p-[18px]">
-        <div className="flex">
-          <div className="relative h-[302px] flex-1 rounded-l-lg border-r border-border-light bg-background-secondary p-[22px]">
+      <div className="rounded-[15px] bg-background-white md:p-[18px]">
+        <div className="flex flex-col lg:flex-row h-[390px] md:h-[564px] lg:h-[302px]">
+          <div className="relative  flex-1 rounded-tl-lg rounded-tr-lg lg:rounded-r-none lg:rounded-l-lg border-b lg:border-b-0  lg:border-r border-border-light bg-background-secondary p-[22px]">
             <div className="relative flex items-center justify-between">
               <Input
                 ref={inputRef}
@@ -131,7 +131,7 @@ export function TrainingRoom({
               </Button>
             )}
           </div>
-          <div className="flex-1 rounded-r-lg bg-background-secondary p-[22px]">
+          <div className="flex-1 rounded-bl-lg rounded-br-lg lg:rounded-l-none lg:rounded-r-lg bg-background-secondary p-[22px]">
             <div className="flex items-center justify-between">
               <span className="-mb-1 font-primary text-xl font-medium text-text-primary">
                 {questionValue}
@@ -154,10 +154,10 @@ export function TrainingRoom({
           </div>
         </div>
       </div>
-      <div className="mt-20 flex gap-2.5">
+      <div className="mt-28 md:mt-10 lg:mt-20 flex flex-col md:flex-row gap-2 md:gap-2.5">
         <Button
           onClick={handleSaveClick}
-          className="relative h-14 w-[200px] rounded-[30px] bg-brand-primary font-primary text-lg font-bold leading-7 text-text-inverse transition-colors duration-200 hover:bg-brand-primaryHover disabled:opacity-50 disabled:cursor-not-allowed"
+          className="relative h-14 md:w-[200px] rounded-[30px] bg-brand-primary font-primary text-lg font-bold leading-7 text-text-inverse transition-colors duration-200 hover:bg-brand-primaryHover disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isSubmitting || (!canSave() && answers.length === 0)}
         >
           {isSubmitting && (
@@ -168,7 +168,7 @@ export function TrainingRoom({
         <Button
           variant="outline"
           onClick={onCancel}
-          className="h-14 w-[200px] rounded-[30px] border-brand-primary font-primary text-lg font-bold leading-7 text-brand-primary"
+          className="h-14 md:w-[200px] border md:border shadow-sm rounded-[30px] border-brand-primary font-primary text-lg font-bold leading-7 text-text-secondary md:text-brand-primary max-md:border-none max-md:shadow-none"
           disabled={isSubmitting}
         >
           Cancel

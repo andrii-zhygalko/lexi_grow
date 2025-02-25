@@ -131,7 +131,10 @@ export function Filters({ variant }: FiltersProps) {
   };
 
   return (
-    <div className="flex items-center gap-2" role="search">
+    <div
+      className="flex flex-col md:flex-row md:items-center gap-2"
+      role="search"
+    >
       <div className="relative">
         <Input
           type="text"
@@ -140,7 +143,7 @@ export function Filters({ variant }: FiltersProps) {
           onKeyDown={(e) => e.key === 'Escape' && handleSearchClear()}
           placeholder="Find the word"
           maxLength={MAX_SEARCH_LENGTH}
-          className="h-12 min-w-[300px] rounded-[15px] border-border-default px-6 py-3 font-primary text-base font-medium placeholder:text-text-primary"
+          className="h-12 md:min-w-[300px] rounded-[15px] border-border-default px-6 py-3 font-primary text-base font-medium placeholder:text-text-primary"
           aria-label="Search words"
           aria-describedby={searchError ? 'search-error' : undefined}
           aria-invalid={!!searchError}

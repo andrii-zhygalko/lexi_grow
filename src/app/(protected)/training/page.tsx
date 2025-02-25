@@ -101,7 +101,7 @@ export default function TrainingPage() {
   const progress = Math.round((answers.length / tasks.length) * 100);
 
   return (
-    <div className="min-h-screen bg-background-page px-[100px] pt-16 pb-24">
+    <div className="min-h-screen bg-background-page px-4 md:px-8 lg:px-[100px]  pt-6 pb-20 md:pt-16 md:pb-24 lg:max-w-[1440px] mx-auto">
       <div className="mb-4 flex justify-end">
         <div className="relative">
           <ProgressCircle

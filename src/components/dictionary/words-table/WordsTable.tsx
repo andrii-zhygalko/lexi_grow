@@ -38,22 +38,31 @@ type WordsTableProps = {
 
 const columnHelper = createColumnHelper<WordResponse>();
 
-const baseCellStyles = 'px-[22px] py-[16px] font-primary text-xl';
+const baseCellStyles =
+  'h-[69px] py-[14px] lg:h-[72px] px-[10px] md:px-[16px] lg:px-[22px] font-primary text-sm md:text-lg lg:text-xl';
+
 const tableBorderStyles = 'border-b border-table-border';
 
 const columnWidths = {
   dictionary: {
-    word: 'w-[25%] min-w-[180px]',
-    translation: 'w-[25%] min-w-[180px]',
-    category: 'w-[20%] min-w-[140px]',
-    progress: 'w-[15%] min-w-[120px]',
-    actions: 'w-[15%] min-w-[100px]',
+    word: 'w-[25%] min-w-[82px] md:w-[25%] md:min-w-[160px] lg:w-[25%] lg:min-w-[180px]',
+    translation:
+      'w-[35%] min-w-[116px] md:w-[25%] md:min-w-[169px] w-[25%] lg:min-w-[180px]',
+    category:
+      'hidden md:md:table-cell md:w-[22%] md:min-w-[151px] lg:w-[20%] lg:min-w-[140px]',
+    progress:
+      'w-[25%] min-w-[95px] md:w-[18%] md:min-w-[122px] lg:w-[15%] lg:min-w-[120px]',
+    actions:
+      'w-[15%] min-w-[50px] md:w-[10%] md:min-w-[66px] lg:w-[15%] lg:min-w-[100px]',
   },
   recommend: {
-    word: 'w-[30%] min-w-[200px]',
-    translation: 'w-[30%] min-w-[200px]',
-    category: 'w-[20%] min-w-[140px]',
-    actions: 'w-[20%] min-w-[160px]',
+    word: 'w-[25%] min-w-[90px] md:w-[25%] md:min-w-[180px] lg:w-[30%] lg:min-w-[200px]',
+    translation:
+      'w-[35%] min-w-[116px] md:w-[25%] md:min-w-[180px] lg:w-[30%] lg:min-w-[200px]',
+    category:
+      'w-[25%] min-w-[99px] md:w-[25%] md:min-w-[160px] lg:w-[20%] lg:min-w-[140px]',
+    actions:
+      'w-[15%] min-w-[38px] md:w-[25%] md:min-w-[148px] lg:w-[20%] lg:min-w-[160px]',
   },
 } as const;
 
@@ -83,7 +92,7 @@ export function WordsTable(props: WordsTableProps) {
           <span>Word</span>
           <Icon
             id="#flag-united-kingdom"
-            className="h-8 w-8"
+            className="h-8 w-8 hidden md:block"
             aria-hidden="true"
           />
         </div>
@@ -98,7 +107,11 @@ export function WordsTable(props: WordsTableProps) {
       header: () => (
         <div className="flex items-center justify-between">
           <span>Translation</span>
-          <Icon id="#flag-ukraine" className="h-8 w-8" aria-hidden="true" />
+          <Icon
+            id="#flag-ukraine"
+            className="h-8 w-8 hidden md:block"
+            aria-hidden="true"
+          />
         </div>
       ),
       cell: (info) => (
@@ -108,9 +121,19 @@ export function WordsTable(props: WordsTableProps) {
       ),
     }),
     columnHelper.accessor('category', {
-      header: 'Category',
+      header: () => (
+        <div className={cn(variant === 'dictionary' && 'hidden md:table-cell')}>
+          Category
+        </div>
+      ),
       cell: (info) => (
-        <div className="truncate capitalize" title={info.getValue()}>
+        <div
+          className={cn(
+            'truncate capitalize',
+            variant === 'dictionary' && 'hidden md:table-cell'
+          )}
+          title={info.getValue()}
+        >
           {info.getValue()}
         </div>
       ),
@@ -122,11 +145,11 @@ export function WordsTable(props: WordsTableProps) {
             cell: ({ getValue }) => {
               const value = getValue();
               return (
-                <div className="flex items-center">
-                  <div className="w-[48px] text-left">
+                <div className="flex justify-center md:justify-start items-center">
+                  <div className="hidden md:block w-[48px] text-left">
                     <span>{value}%</span>
                   </div>
-                  <div className="mb-1 ml-1.5">
+                  <div className="mb-1 md:ml-1.5">
                     <ProgressCircle value={value} />
                   </div>
                 </div>
@@ -148,7 +171,7 @@ export function WordsTable(props: WordsTableProps) {
                 <PopoverTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="font-secondary text-[22px] font-semibold px-1 h-10 w-10"
+                    className="font-secondary md:text-lg lg:text-[22px] font-semibold px-2 "
                   >
                     ...
                   </Button>
@@ -200,11 +223,11 @@ export function WordsTable(props: WordsTableProps) {
         return (
           <Button
             variant="ghost"
-            className="flex items-center gap-2 font-primary text-base font-medium text-text-primary transition-colors duration-200 hover:text-brand-primary h-10 group"
+            className=" px-1 flex flex-col lg:flex-row w-full md:w-auto md:items-start lg:items-center gap-0.5 lg:gap-2 font-primary text-sm lg:text-base font-medium text-text-primary transition-colors duration-200 hover:text-brand-primary group"
             onClick={() => variant === 'recommend' && props.onWordAdd(id)}
             disabled={isAdding}
           >
-            <span className="truncate">Add to dictionary</span>
+            <span className="hidden md:block ">Add to dictionary</span>
             {isAdding ? (
               <Loader2 className="h-5 w-5 animate-spin shrink-0" />
             ) : (
@@ -227,9 +250,9 @@ export function WordsTable(props: WordsTableProps) {
   });
 
   const TableWrapper = ({ children }: { children: React.ReactNode }) => (
-    <div className="rounded-[15px] bg-background-white p-[18px] min-h-[612px]">
+    <div className="rounded-[15px] bg-background-white p-0 md:p-[18px] min-h-[552px] md:min-h-[588px] lg:min-h-[612px] ">
       <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-[800px] border-separate border-spacing-0">
+        <table className="w-full lg:min-w-[800px] border-separate border-spacing-0">
           {children}
         </table>
       </div>
@@ -248,7 +271,7 @@ export function WordsTable(props: WordsTableProps) {
                   className={cn(
                     baseCellStyles,
                     tableBorderStyles,
-                    'bg-table-row text-left font-primary text-xl font-medium',
+                    'h-[69px] py-[14px] lg:h-[72px] lg:py-[18px] bg-table-row text-left font-primary text-base md:text-lg lg:text-xl font-medium',
                     columnWidths[variant][
                       header.id.split(
                         '_'
@@ -277,7 +300,7 @@ export function WordsTable(props: WordsTableProps) {
                   className={cn(
                     baseCellStyles,
                     tableBorderStyles,
-                    'bg-table-cell py-[24px]',
+                    'bg-table-cell h-[69px] py-[14px] lg:h-[72px] lg:py-[18px]',
                     columnWidths[variant][
                       Object.keys(columnWidths[variant])[
                         colIndex
@@ -290,7 +313,7 @@ export function WordsTable(props: WordsTableProps) {
                       'rounded-br-lg'
                   )}
                 >
-                  <div className="h-6 bg-background-skeleton rounded-2xl animate-pulse" />
+                  <div className="h-6 lg:w-32 bg-background-skeleton rounded-2xl animate-pulse" />
                 </td>
               ))}
             </tr>
@@ -321,7 +344,7 @@ export function WordsTable(props: WordsTableProps) {
                 className={cn(
                   baseCellStyles,
                   tableBorderStyles,
-                  'bg-table-row text-left font-primary text-xl font-medium',
+                  'h-[69px] py-[14px] lg:h-[72px] lg:py-[18px] bg-table-row text-left font-primary text-base md:text-lg lg:text-xl font-medium',
                   columnWidths[variant][
                     header.id.split(
                       '_'

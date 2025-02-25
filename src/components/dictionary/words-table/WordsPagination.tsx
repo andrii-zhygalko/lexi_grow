@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/common/Icon';
 import { cn } from '@/lib/utils';
@@ -10,9 +11,10 @@ import { setFilter as setDictionaryFilter } from '@/redux/features/dictionary/di
 import { setFilter as setRecommendFilter } from '@/redux/features/recommend/recommendSlice';
 
 const baseButtonStyles =
-  'h-9 rounded-lg border border-border-default hover:text-brand-primary';
-const iconButtonStyles = 'w-9 p-0';
-const pageButtonStyles = 'min-w-[36px] font-primary text-[13px] font-semibold';
+  'p-0 h-9 rounded-lg border border-border-default hover:text-brand-primary';
+const iconButtonStyles = 'w-[32px] h-[32px] p-0';
+const pageButtonStyles =
+  'w-[32px] h-[32px] font-primary text-[13px] font-semibold';
 const iconStyles =
   'h-4 w-4 fill-text-primary transition-colors duration-200 group-hover:fill-brand-primary';
 const activePageStyles =
@@ -30,6 +32,21 @@ export function WordsPagination({ className, variant }: WordsPaginationProps) {
       ? selectDictionaryPaginationData
       : selectRecommendPaginationData
   );
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
 
   const handlePageChange = (newPage: number) => {
     const setFilter =
@@ -42,36 +59,67 @@ export function WordsPagination({ className, variant }: WordsPaginationProps) {
   };
 
   const getPageNumbers = () => {
-    if (totalPages <= 7) {
+    if (totalPages <= (isMobile ? 4 : 7)) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
     const pages: (number | string)[] = [];
 
-    pages.push(1);
+    if (isMobile) {
+      if (totalPages <= 4) {
+        return Array.from({ length: totalPages }, (_, i) => i + 1);
+      }
 
-    let startPage: number;
-    let endPage: number;
+      if (page <= 2) {
+        pages.push(1);
+        pages.push(2);
+        pages.push('...');
+        pages.push(totalPages);
+        return pages;
+      }
 
-    if (page <= 3) {
-      startPage = 2;
-      endPage = 5;
-      pages.push(...range(startPage, endPage));
-      pages.push('...');
-    } else if (page >= totalPages - 2) {
-      pages.push('...');
-      startPage = totalPages - 4;
-      endPage = totalPages - 1;
-      pages.push(...range(startPage, endPage));
+      if (page < totalPages - 1) {
+        pages.push(page - 1);
+        pages.push(page);
+        pages.push('...');
+        pages.push(totalPages);
+      } else {
+        if (page === totalPages - 1) {
+          pages.push(page - 1);
+          pages.push(page);
+          pages.push(totalPages);
+        } else {
+          pages.push(page - 2);
+          pages.push(page - 1);
+          pages.push(page);
+        }
+      }
     } else {
-      pages.push('...');
-      startPage = page - 1;
-      endPage = page + 1;
-      pages.push(...range(startPage, endPage));
-      pages.push('...');
-    }
+      pages.push(1);
 
-    pages.push(totalPages);
+      let startPage: number;
+      let endPage: number;
+
+      if (page <= 3) {
+        startPage = 2;
+        endPage = 5;
+        pages.push(...range(startPage, endPage));
+        pages.push('...');
+      } else if (page >= totalPages - 2) {
+        pages.push('...');
+        startPage = totalPages - 4;
+        endPage = totalPages - 1;
+        pages.push(...range(startPage, endPage));
+      } else {
+        pages.push('...');
+        startPage = page - 1;
+        endPage = page + 1;
+        pages.push(...range(startPage, endPage));
+        pages.push('...');
+      }
+
+      pages.push(totalPages);
+    }
 
     return pages;
   };

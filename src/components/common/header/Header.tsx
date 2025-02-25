@@ -40,14 +40,14 @@ export function Header() {
 
   return (
     <header className="bg-background-white px-4 py-5 md:px-8 lg:px-[100px]">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between lg:max-w-[1240px] mx-auto">
         <Link href="/dictionary" className="flex items-center gap-2 sm:gap-4">
           <Icon
             id="#lexigrow"
-            className="h-9 w-9 md:h-10 md:w-10 lg:h-10 lg:w-10"
+            className="mb-1 h-9 w-9 md:h-10 md:w-10 lg:h-10 lg:w-10"
             aria-hidden="true"
           />
-          <span className="-mb-1.5 font-primary text-lg font-semibold leading-6 text-text-primary md:text-[22px] md:leading-8 lg:text-[22px] lg:leading-8">
+          <span className="font-primary text-lg font-semibold leading-6 text-text-primary md:text-[22px] md:leading-8 lg:text-[22px] lg:leading-8">
             LexiGrow
           </span>
         </Link>
@@ -66,7 +66,7 @@ export function Header() {
             <Button
               variant="ghost"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="ml-5 p-1"
+              className="ml-2 md:ml-5 p-1"
               aria-label="Open navigation menu"
             >
               <Icon
