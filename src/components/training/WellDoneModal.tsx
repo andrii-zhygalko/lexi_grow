@@ -35,7 +35,7 @@ export function WellDoneModal({
       hideDescription={true}
       className="[&_h2]:text-center"
     >
-      <div className="mt-7 flex gap-16">
+      <div className="mt-7 flex gap-8 md:gap-16">
         <div className="flex-1">
           <p className="font-primary text-base font-normal leading-6 text-text-inverse/50">
             Correct answers:
@@ -71,7 +71,7 @@ export function WellDoneModal({
             alt="Open book"
             width={212}
             height={179}
-            className="translate-x-14 translate-y-10"
+            className="w-[152px] h-[121px] md:w-[212px] md:h-[179px] translate-x-4 md:translate-x-14 translate-y-10"
           />
         </div>
       </div>

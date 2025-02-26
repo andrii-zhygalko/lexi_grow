@@ -54,7 +54,7 @@ export const Modal = ({
         )}
       >
         <div className={cn('flex-shrink-0 ', contentClassName)}>
-          <DialogHeader className="relative px-16 pt-12">
+          <DialogHeader className="relative px-4 md:px-16 pt-12">
             <DialogClose asChild>
               <Button
                 variant="ghost"
@@ -73,7 +73,7 @@ export const Modal = ({
               className={cn(
                 hideTitle && 'sr-only',
                 !hideTitle &&
-                  'font-primary text-[40px] font-semibold leading-[48px] tracking-[-0.8px] text-text-inverse'
+                  'font-primary text-2xl md:text-[40px] font-semibold leading-[48px] tracking-[-0.8px] text-text-inverse'
               )}
             >
               {title}
@@ -84,7 +84,7 @@ export const Modal = ({
                 className={cn(
                   hideDescription && 'sr-only',
                   !hideDescription &&
-                    'mt-5 font-primary text-xl font-normal leading-[30px] text-text-inverse/80'
+                    'mt-4 md:mt-5 font-primary text-base md:text-xl font-normal leading-[30px] text-text-inverse/80'
                 )}
               >
                 {description}
@@ -95,7 +95,7 @@ export const Modal = ({
 
         <div
           className={cn(
-            'px-16',
+            'px-4 md:px-16',
             'pb-12',
             'w-full flex-1 overflow-y-auto scrollbar-thin',
             'scrollbar-track-transparent scrollbar-thumb-border-inputAccentLight/50',

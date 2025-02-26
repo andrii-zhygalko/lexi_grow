@@ -77,7 +77,7 @@ export function EditWordForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-6">
       <div className="relative mb-10">
         <Select
           value={selectedCategory || ''}
@@ -85,7 +85,7 @@ export function EditWordForm({
         >
           <SelectTrigger
             variant="modal"
-            className="max-w-[210px] rounded-[15px] shadow-none mt-6"
+            className="max-w-[210px] rounded-[15px] shadow-none "
             aria-label="Select word category"
           >
             <SelectValue placeholder="Select category" />
@@ -95,7 +95,7 @@ export function EditWordForm({
               <SelectItem
                 key={category}
                 value={category}
-                className="mb-1 last:mb-0 py-0 font-primary text-base font-medium text-text-secondary focus:bg-transparent focus:text-brand-primary"
+                className="mb-1 last:mb-0 py-0 font-primary text-sm md:text-base font-medium text-text-secondary focus:bg-transparent focus:text-brand-primary"
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </SelectItem>
@@ -109,7 +109,7 @@ export function EditWordForm({
         )}
         {selectedCategory === 'verb' && (
           <div
-            className="absolute left-0 -bottom-8 flex gap-4"
+            className="absolute left-0 -bottom-8 flex gap-4 "
             role="radiogroup"
             aria-label="Verb type"
           >
@@ -140,12 +140,17 @@ export function EditWordForm({
                     className="absolute scale-125 inset-0 size-[18px] stroke-[3] fill-radio-checkedLight stroke-radio-checked opacity-0 transition-opacity duration-200 peer-checked:opacity-100"
                   />
                 </div>
-                <span className="font-primary text-base font-normal text-text-inverse">
+                <span className="font-primary text-sm md:text-base font-normal text-text-inverse">
                   {label}
                 </span>
               </label>
             ))}
           </div>
+        )}
+        {selectedRadio && (
+          <p className="absolute left-0 -bottom-[54px] font-primary text-[10px] md:text-xs font-normal text-[#FCFCFC] md:text-[rgba(252,252,252,0.80)] leading-[12px] md:leading-[14px]">
+            Such data must be entered in the format I form-II form-III form.
+          </p>
         )}
         {errors.isIrregular && (
           <p className="absolute left-0 -bottom-12 text-xs text-status-errorDark">
@@ -154,8 +159,8 @@ export function EditWordForm({
         )}
       </div>
 
-      <div className="mt-6 flex items-center gap-8">
-        <div className="w-[354px]">
+      <div className="mt-[60px] flex flex-col-reverse gap-2  items-start md:flex-row md:items-center md:gap-8">
+        <div className="w-[311px] md:w-[354px]">
           <FormField error={errors.ua?.message} variant="modal">
             <Input
               variant="light"
@@ -168,13 +173,13 @@ export function EditWordForm({
         </div>
         <div className="flex items-center">
           <Icon id="#flag-ukraine" className="h-8 w-8" aria-hidden="true" />
-          <span className="ml-2 font-primary text-base font-medium leading-6 text-text-inverse">
+          <span className="ml-2 font-primary text-sm md:text-base font-medium leading-6 text-text-inverse">
             Ukrainian
           </span>
         </div>
       </div>
-      <div className="mt-6 flex items-center gap-8">
-        <div className="w-[354px]">
+      <div className="mt-6 flex flex-col-reverse gap-2 items-start md:flex-row md:items-center md:gap-8">
+        <div className="w-[311px] md:w-[354px]">
           <FormField error={errors.en?.message} variant="modal">
             <Input
               variant="light"
@@ -191,7 +196,7 @@ export function EditWordForm({
             className="h-8 w-8"
             aria-hidden="true"
           />
-          <span className="ml-2 font-primary text-base font-medium leading-6 text-text-inverse">
+          <span className="ml-2 font-primary text-sm md:text-base font-medium leading-6 text-text-inverse">
             English
           </span>
         </div>
@@ -199,7 +204,7 @@ export function EditWordForm({
       <div className="mt-8 flex gap-2.5">
         <Button
           type="submit"
-          className="flex-1 h-[56px] rounded-[30px] bg-background-white hover:bg-background-secondary hover:text-brand-primary font-primary text-lg font-bold leading-7 text-text-primary relative"
+          className="flex-1 h-[56px] rounded-[30px] bg-background-white hover:bg-background-secondary hover:text-brand-primary font-primary text-base md:text-lg font-bold leading-7 text-text-primary relative"
           disabled={isSubmitting}
         >
           {isSubmitting && (
@@ -210,7 +215,7 @@ export function EditWordForm({
         <Button
           type="button"
           onClick={onCancel}
-          className="flex-1 h-[56px] rounded-[30px] border border-border-inputAccentLight font-primary text-lg font-bold leading-7 text-text-inverse"
+          className="flex-1 h-[56px] rounded-[30px] border border-border-inputAccentLight font-primary text-base md:text-lg font-bold leading-7 text-text-inverse"
         >
           Cancel
         </Button>

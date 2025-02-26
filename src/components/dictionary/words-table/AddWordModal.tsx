@@ -23,7 +23,6 @@ export function AddWordModal({
       onOpenChange={onOpenChange}
       title="Add word"
       description="Adding a new word to the dictionary is an important step in enriching the language base and expanding the vocabulary."
-      className="w-[628px]"
     >
       <AddWordForm
         categories={categories}

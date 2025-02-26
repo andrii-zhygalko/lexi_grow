@@ -29,7 +29,6 @@ export function EditWordModal({
       onOpenChange={onOpenChange}
       title="Edit Word"
       description="Update word details"
-      className="w-[628px]"
       hideDescription={true}
     >
       <EditWordForm

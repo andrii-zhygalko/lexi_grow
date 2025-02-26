@@ -63,7 +63,7 @@ export function AddWordForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-4 md:mt-8">
       <div className="relative">
         <Select
           value={selectedCategory || ''}
@@ -81,7 +81,7 @@ export function AddWordForm({
               <SelectItem
                 key={category}
                 value={category}
-                className="mb-1 last:mb-0 py-0 font-primary text-base font-medium text-text-secondary focus:bg-transparent focus:text-brand-primary"
+                className="mb-1 last:mb-0 py-0 font-primary text-sm md:text-base font-medium text-text-secondary focus:bg-transparent focus:text-brand-primary"
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </SelectItem>
@@ -133,6 +133,11 @@ export function AddWordForm({
             ))}
           </div>
         )}
+        {selectedRadio && (
+          <p className="absolute left-0 -bottom-[54px] font-primary text-[10px] md:text-xs font-normal text-[#FCFCFC] md:text-[rgba(252,252,252,0.80)] leading-[12px] md:leading-[14px]">
+            Such data must be entered in the format I form-II form-III form.
+          </p>
+        )}
         {errors.isIrregular && (
           <p className="absolute left-0 -bottom-12 text-xs text-status-errorDark">
             {errors.isIrregular.message}
@@ -140,8 +145,8 @@ export function AddWordForm({
         )}
       </div>
 
-      <div className="mt-[50px] flex items-center gap-8">
-        <div className="w-[354px]">
+      <div className="mt-[60px] flex flex-col-reverse gap-2 items-start md:flex-row md:items-center md:gap-8">
+        <div className="w-[311px] md:w-[354px]">
           <FormField error={errors.ua?.message} variant="modal">
             <Input
               variant="light"
@@ -154,13 +159,13 @@ export function AddWordForm({
         </div>
         <div className="flex items-center">
           <Icon id="#flag-ukraine" className="h-8 w-8" aria-hidden="true" />
-          <span className="ml-2 font-primary text-base font-medium leading-6 text-text-inverse">
+          <span className="ml-2 font-primary text-sm md:text-base font-medium leading-6 text-text-inverse">
             Ukrainian
           </span>
         </div>
       </div>
-      <div className="mt-6 flex items-center gap-8">
-        <div className="w-[354px]">
+      <div className="mt-6 flex flex-col-reverse gap-2 items-start md:flex-row md:items-center md:gap-8">
+        <div className="w-[311px] md:w-[354px]">
           <FormField error={errors.en?.message} variant="modal">
             <Input
               variant="light"
@@ -177,7 +182,7 @@ export function AddWordForm({
             className="h-8 w-8"
             aria-hidden="true"
           />
-          <span className="ml-2 font-primary text-base font-medium leading-6 text-text-inverse">
+          <span className="ml-2 font-primary text-sm md:text-base font-medium leading-6 text-text-inverse">
             English
           </span>
         </div>
@@ -185,7 +190,7 @@ export function AddWordForm({
       <div className="mt-8 flex justify-end gap-4">
         <Button
           type="submit"
-          className="relative flex-1 h-[56px] rounded-[30px] bg-background-white hover:bg-background-secondary hover:text-brand-primary font-primary text-lg font-bold leading-7 text-text-primary"
+          className="relative flex-1 h-[56px] rounded-[30px] bg-background-white hover:bg-background-secondary hover:text-brand-primary font-primary text-base md:text-lg font-bold leading-7 text-text-primary"
           disabled={isSubmitting}
         >
           {isSubmitting && (
@@ -196,7 +201,7 @@ export function AddWordForm({
         <Button
           type="button"
           onClick={onCancel}
-          className="flex-1 h-[56px] rounded-[30px] border border-border-inputAccentLight font-primary text-lg font-bold leading-7 text-text-inverse"
+          className="flex-1 h-[56px] rounded-[30px] border border-border-inputAccentLight font-primary text-base md:text-lg font-bold leading-7 text-text-inverse"
         >
           Cancel
         </Button>
