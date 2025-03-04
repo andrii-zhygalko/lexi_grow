@@ -33,7 +33,7 @@ export function WellDoneModal({
       title="Well done"
       description="Training results summary"
       hideDescription={true}
-      className="[&_h2]:text-center"
+      className="[&_h2]:text-center max-md:min-w-[320px]"
     >
       <div className="mt-7 flex gap-8 md:gap-16">
         <div className="flex-1">

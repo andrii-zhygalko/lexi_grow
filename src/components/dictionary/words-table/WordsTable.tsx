@@ -1,3 +1,4 @@
+import { TruncatedCell } from './TruncatedCell';
 import {
   createColumnHelper,
   flexRender,
@@ -86,10 +87,8 @@ export function WordsTable(props: WordsTableProps) {
       });
   };
 
-  const handleCellClick = (columnId: string, rowId: string) => {
-    if (columnId === 'en' || columnId === 'ua' || columnId === 'category') {
-      setExpandedRowId(expandedRowId === rowId ? null : rowId);
-    }
+  const handleCellClick = (rowId: string) => {
+    setExpandedRowId(expandedRowId === rowId ? null : rowId);
   };
 
   const columns = [
@@ -105,15 +104,11 @@ export function WordsTable(props: WordsTableProps) {
         </div>
       ),
       cell: (info) => (
-        <div
-          className={cn(
-            'truncate transition-all duration-200',
-            expandedRowId === info.row.id && 'whitespace-normal break-words'
-          )}
-          title={info.getValue()}
-        >
-          {info.getValue()}
-        </div>
+        <TruncatedCell
+          content={info.getValue()}
+          isExpanded={expandedRowId === info.row.id}
+          onClick={() => handleCellClick(info.row.id)}
+        />
       ),
     }),
     columnHelper.accessor('ua', {
@@ -128,29 +123,22 @@ export function WordsTable(props: WordsTableProps) {
         </div>
       ),
       cell: (info) => (
-        <div
-          className={cn(
-            'truncate transition-all duration-200',
-            expandedRowId === info.row.id && 'whitespace-normal break-words'
-          )}
-          title={info.getValue()}
-        >
-          {info.getValue()}
-        </div>
+        <TruncatedCell
+          content={info.getValue()}
+          isExpanded={expandedRowId === info.row.id}
+          onClick={() => handleCellClick(info.row.id)}
+        />
       ),
     }),
     columnHelper.accessor('category', {
       header: () => <div>Category</div>,
       cell: (info) => (
-        <div
-          className={cn(
-            'truncate capitalize transition-all duration-200',
-            expandedRowId === info.row.id && 'whitespace-normal break-words'
-          )}
-          title={info.getValue()}
-        >
-          {info.getValue()}
-        </div>
+        <TruncatedCell
+          content={info.getValue()}
+          isExpanded={expandedRowId === info.row.id}
+          onClick={() => handleCellClick(info.row.id)}
+          className="capitalize"
+        />
       ),
     }),
     ...(variant === 'dictionary'
@@ -391,16 +379,11 @@ export function WordsTable(props: WordsTableProps) {
             {row.getVisibleCells().map((cell, index) => (
               <td
                 key={cell.id}
-                onClick={() => handleCellClick(cell.column.id, row.id)}
                 className={cn(
                   baseCellStyles,
                   tableBorderStyles,
                   'bg-table-cell transition-all duration-200',
                   'overflow-hidden',
-                  (cell.column.id === 'en' ||
-                    cell.column.id === 'ua' ||
-                    cell.column.id === 'category') &&
-                    'cursor-pointer',
                   columnWidths[variant][
                     Object.keys(columnWidths[variant])[
                       index

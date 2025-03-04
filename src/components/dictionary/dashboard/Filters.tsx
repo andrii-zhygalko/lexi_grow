@@ -32,6 +32,7 @@ import {
 } from '@/redux/features/recommend/selectors';
 import { setFilter as setDictionaryFilter } from '@/redux/features/dictionary/dictionarySlice';
 import { setFilter as setRecommendFilter } from '@/redux/features/recommend/recommendSlice';
+import { Button } from '@/components/ui/button';
 import { MAX_SEARCH_LENGTH } from '@/lib/constants/dashboard';
 
 interface FiltersProps {
@@ -149,6 +150,25 @@ export function Filters({ variant }: FiltersProps) {
           aria-invalid={!!searchError}
           aria-busy={status === 'loading'}
         />
+
+        {/* Clear button - only shown when searchValue exists */}
+        {searchValue && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={handleSearchClear}
+            className="absolute right-12 top-1/2 -translate-y-1/2 p-0 h-5 w-5 group hover:bg-transparent"
+            aria-label="Clear search"
+          >
+            <Icon
+              id="#close"
+              className="h-4 w-4 stroke-text-primary group-hover:stroke-brand-primary group-hover:scale-110 transition-all duration-200"
+              aria-hidden="true"
+            />
+          </Button>
+        )}
+
         <Icon
           id="#search"
           className={cn(
@@ -157,6 +177,7 @@ export function Filters({ variant }: FiltersProps) {
           )}
           aria-hidden="true"
         />
+
         {searchError && (
           <p
             id="search-error"
