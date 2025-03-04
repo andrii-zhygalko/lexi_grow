@@ -39,30 +39,30 @@ type WordsTableProps = {
 const columnHelper = createColumnHelper<WordResponse>();
 
 const baseCellStyles =
-  'h-[69px] py-[14px] lg:h-[72px] px-[10px] md:px-[16px] lg:px-[22px] font-primary text-sm md:text-lg lg:text-xl';
+  'h-[69px] py-[14px] lg:h-[72px] px-[10px] md:px-[14px] lg:px-[22px] font-primary text-sm md:text-lg lg:text-xl';
 
 const tableBorderStyles = 'border-b border-table-border';
 
 const columnWidths = {
   dictionary: {
-    word: 'w-[25%] min-w-[82px] md:w-[25%] md:min-w-[160px] lg:w-[25%] lg:min-w-[180px]',
+    word: 'w-[25%] min-w-[82px] max-w-[82px] md:w-[25%] md:min-w-[160px] md:max-w-[160px] lg:w-[25%] lg:min-w-[180px]',
     translation:
-      'w-[35%] min-w-[116px] md:w-[25%] md:min-w-[169px] w-[25%] lg:min-w-[180px]',
+      'w-[35%] min-w-[116px] max-w-[116px] md:w-[25%] md:min-w-[169px] w-[25%] lg:min-w-[180px]',
     category:
-      'hidden md:md:table-cell md:w-[22%] md:min-w-[151px] lg:w-[20%] lg:min-w-[140px]',
+      'hidden md:md:table-cell md:w-[22%] md:min-w-[151px] md:max-w-[151px] lg:w-[20%] lg:min-w-[140px]',
     progress:
       'w-[25%] min-w-[95px] md:w-[18%] md:min-w-[122px] lg:w-[15%] lg:min-w-[120px]',
     actions:
       'w-[15%] min-w-[50px] md:w-[10%] md:min-w-[66px] lg:w-[15%] lg:min-w-[100px]',
   },
   recommend: {
-    word: 'w-[25%] min-w-[90px] md:w-[25%] md:min-w-[180px] lg:w-[30%] lg:min-w-[200px]',
+    word: 'w-[25%] min-w-[90px] max-w-[90px] md:w-[25%] md:min-w-[180px] md:max-w-[180px] lg:w-[30%] lg:min-w-[200px]',
     translation:
-      'w-[35%] min-w-[116px] md:w-[25%] md:min-w-[180px] lg:w-[30%] lg:min-w-[200px]',
+      'w-[35%] min-w-[116px] max-w-[116px] md:w-[25%] md:min-w-[180px] md:max-w-[180px] lg:w-[30%] lg:min-w-[200px]',
     category:
-      'w-[25%] min-w-[99px] md:w-[25%] md:min-w-[160px] lg:w-[20%] lg:min-w-[140px]',
+      'w-[25%] min-w-[99px] max-w-[99px] md:w-[25%] md:min-w-[160px] md:max-w-[160px] lg:w-[20%] lg:min-w-[140px]',
     actions:
-      'w-[15%] min-w-[38px] md:w-[25%] md:min-w-[148px] lg:w-[20%] lg:min-w-[160px]',
+      'w-[15%] min-w-[38px] md:w-[25%] md:min-w-[148px] md:max-w-[148px] lg:w-[20%] lg:min-w-[160px]',
   },
 } as const;
 
@@ -70,6 +70,7 @@ export function WordsTable(props: WordsTableProps) {
   const { variant, words, isLoading } = props;
   const dispatch = useAppDispatch();
   const [deletingWordIds, setDeletingWordIds] = useState<string[]>([]);
+  const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
 
   const handleDeleteWord = (wordId: string) => {
     setDeletingWordIds((prev) => [...prev, wordId]);
@@ -85,6 +86,12 @@ export function WordsTable(props: WordsTableProps) {
       });
   };
 
+  const handleCellClick = (columnId: string, rowId: string) => {
+    if (columnId === 'en' || columnId === 'ua' || columnId === 'category') {
+      setExpandedRowId(expandedRowId === rowId ? null : rowId);
+    }
+  };
+
   const columns = [
     columnHelper.accessor('en', {
       header: () => (
@@ -98,7 +105,13 @@ export function WordsTable(props: WordsTableProps) {
         </div>
       ),
       cell: (info) => (
-        <div className="truncate" title={info.getValue()}>
+        <div
+          className={cn(
+            'truncate transition-all duration-200',
+            expandedRowId === info.row.id && 'whitespace-normal break-words'
+          )}
+          title={info.getValue()}
+        >
           {info.getValue()}
         </div>
       ),
@@ -115,22 +128,24 @@ export function WordsTable(props: WordsTableProps) {
         </div>
       ),
       cell: (info) => (
-        <div className="truncate" title={info.getValue()}>
+        <div
+          className={cn(
+            'truncate transition-all duration-200',
+            expandedRowId === info.row.id && 'whitespace-normal break-words'
+          )}
+          title={info.getValue()}
+        >
           {info.getValue()}
         </div>
       ),
     }),
     columnHelper.accessor('category', {
-      header: () => (
-        <div className={cn(variant === 'dictionary' && 'hidden md:table-cell')}>
-          Category
-        </div>
-      ),
+      header: () => <div>Category</div>,
       cell: (info) => (
         <div
           className={cn(
-            'truncate capitalize',
-            variant === 'dictionary' && 'hidden md:table-cell'
+            'truncate capitalize transition-all duration-200',
+            expandedRowId === info.row.id && 'whitespace-normal break-words'
           )}
           title={info.getValue()}
         >
@@ -223,7 +238,7 @@ export function WordsTable(props: WordsTableProps) {
         return (
           <Button
             variant="ghost"
-            className=" px-1 flex flex-col lg:flex-row w-full md:w-auto md:items-start lg:items-center gap-0.5 lg:gap-2 font-primary text-sm lg:text-base font-medium text-text-primary transition-colors duration-200 hover:text-brand-primary group"
+            className="px-0 lg:px-1 flex flex-col lg:flex-row w-full md:w-auto md:items-start lg:items-center gap-0.5 lg:gap-2 font-primary text-sm lg:text-base font-medium text-text-primary transition-colors duration-200 hover:text-brand-primary group"
             onClick={() => variant === 'recommend' && props.onWordAdd(id)}
             disabled={isAdding}
           >
@@ -366,14 +381,26 @@ export function WordsTable(props: WordsTableProps) {
       </thead>
       <tbody>
         {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="">
+          <tr
+            key={row.id}
+            className={cn(
+              'hover:bg-gray-50 transition-colors duration-200',
+              expandedRowId === row.id && 'bg-gray-50'
+            )}
+          >
             {row.getVisibleCells().map((cell, index) => (
               <td
                 key={cell.id}
+                onClick={() => handleCellClick(cell.column.id, row.id)}
                 className={cn(
                   baseCellStyles,
                   tableBorderStyles,
-                  'bg-table-cell',
+                  'bg-table-cell transition-all duration-200',
+                  'overflow-hidden',
+                  (cell.column.id === 'en' ||
+                    cell.column.id === 'ua' ||
+                    cell.column.id === 'category') &&
+                    'cursor-pointer',
                   columnWidths[variant][
                     Object.keys(columnWidths[variant])[
                       index

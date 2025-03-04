@@ -69,9 +69,9 @@ export function WellDoneModal({
           <Image
             src="/images/open_book.png"
             alt="Open book"
-            width={212}
-            height={179}
-            className="w-[152px] h-[121px] md:w-[212px] md:h-[179px] translate-x-4 md:translate-x-14 translate-y-10"
+            width={152}
+            height={121}
+            className="h-auto w-[152px] md:w-[225px] translate-x-4 md:translate-x-14 translate-y-10"
           />
         </div>
       </div>
